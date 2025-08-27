@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>用户中心 - 无人机自助打卡</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3B82F6',
+                        secondary: '#1E40AF',
+                        accent: '#06B6D4',
+                        dark: '#1E293B',
+                        light: '#F8FAFC',
+                        'gray-medium': '#64748B',
+                        'gray-light': '#E2E8F0',
+                        'blue-primary': '#3B82F6',
+                        'blue-secondary': '#1E40AF',
+                        'blue-light': '#DBEAFE',
+                        'blue-dark': '#1E3A8A',
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .touch-friendly {
+                touch-action: manipulation;
+                -webkit-tap-highlight-color: transparent;
+            }
+            .safe-area-bottom {
+                padding-bottom: constant(safe-area-inset-bottom);
+                padding-bottom: env(safe-area-inset-bottom);
+            }
+            .miniprogram-scroll {
+                -webkit-overflow-scrolling: touch;
+            }
+            .miniprogram-card {
+                box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+                border-radius: 8px;
+            }
+            .wx-button {
+                border-radius: 4px;
+                font-size: 16px;
+                line-height: 1.4;
+            }
+        }
+    </style>
+</head>
+<body class="font-inter bg-light text-dark antialiased touch-action-manipulation">
+    <div class="min-h-screen w-full pb-20 safe-area-bottom">
+        <!-- 顶部导航栏 -->
+        <header class="sticky top-0 left-0 right-0 bg-white z-30 border-b border-gray-light">
+            <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+                <button onclick="location.href='index_v3.html'" class="text-dark touch-friendly p-2 -ml-2">
+                    <i class="fa fa-arrow-left text-lg"></i>
+                </button>
+                <h1 class="text-lg font-medium">用户中心</h1>
+                <div class="w-8"></div>
+            </div>
+        </header>
+        
+        <!-- 进度指示器 -->
+        <div class="px-4 py-4 bg-gradient-to-r from-blue-light to-blue-50">
+            <div class="flex items-center justify-between">
+                <div class="flex flex-col items-center">
+                    <div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-sm font-bold">1</div>
+                    <span class="text-xs mt-1 text-primary font-medium">填写信息</span>
+                </div>
+                <div class="flex-1 h-0.5 bg-gray-300 mx-3"></div>
+                <div class="flex flex-col items-center">
+                    <div class="w-8 h-8 rounded-full bg-gray-300 text-gray-500 flex items-center justify-center text-sm font-bold">2</div>
+                    <span class="text-xs mt-1 text-gray-500">确认支付</span>
+                </div>
+                <div class="flex-1 h-0.5 bg-gray-300 mx-3"></div>
+                <div class="flex flex-col items-center">
+                    <div class="w-8 h-8 rounded-full bg-gray-300 text-gray-500 flex items-center justify-center text-sm font-bold">3</div>
+                    <span class="text-xs mt-1 text-gray-500">完成订单</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 用户信息表单 -->
+        <div class="px-4 py-4 space-y-4 miniprogram-scroll">
+            <!-- 用户信息 -->
+            <div class="miniprogram-card bg-white p-4">
+                <h2 class="text-base font-bold mb-3 flex items-center">
+                    <i class="fa fa-user text-primary mr-2"></i>
+                    用户信息
+                </h2>
+                <div class="space-y-3">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">手机号码 *</label>
+                        <input type="tel" placeholder="请输入手机号码" class="w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 touch-friendly">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">姓名 *</label>
+                        <input type="text" placeholder="请输入您的姓名" class="w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 touch-friendly">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">性别</label>
+                        <div class="flex space-x-4">
+                            <label class="flex items-center touch-friendly">
+                                <input type="radio" name="gender" value="male" class="mr-2">
+                                <span class="text-sm">👨 男</span>
+                            </label>
+                            <label class="flex items-center touch-friendly">
+                                <input type="radio" name="gender" value="female" class="mr-2">
+                                <span class="text-sm">👩 女</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 订单信息 -->
+            <div class="miniprogram-card bg-white p-4">
+                <div class="flex items-center mb-3">
+                    <i class="fa fa-list-alt text-primary mr-2"></i>
+                    <h3 class="font-medium text-base">订单信息</h3>
+                </div>
+                <div id="order-summary" class="space-y-2">
+                    <!-- 订单内容将通过JavaScript动态生成 -->
+                </div>
+            </div>
+
+            <!-- 支付方式 -->
+            <div class="miniprogram-card bg-white p-4">
+                <h3 class="font-bold text-base mb-3 flex items-center">
+                    <i class="fa fa-credit-card text-primary mr-2"></i>
+                    支付方式
+                </h3>
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between p-3 border-2 border-primary bg-primary/5 rounded-lg touch-friendly">
+                        <div class="flex items-center">
+                            <i class="fa fa-wechat text-primary text-xl mr-3"></i>
+                            <span class="font-medium">微信支付</span>
+                        </div>
+                        <i class="fa fa-check-circle text-primary"></i>
+                    </div>
+                    <div class="flex items-center justify-between p-3 border border-gray-200 rounded-lg touch-friendly">
+                        <div class="flex items-center">
+                            <i class="fa fa-mobile text-gray-medium text-xl mr-3"></i>
+                            <span class="text-gray-medium">支付宝</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 总价 -->
+            <div class="miniprogram-card bg-gradient-to-r from-primary to-secondary p-4 text-white">
+                <div class="flex justify-between items-center">
+                    <span class="text-lg font-bold">总计</span>
+                    <span class="text-2xl font-bold" id="pay-amount">¥199</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 底部支付按钮 -->
+        <div class="fixed bottom-16 left-0 right-0 bg-white border-t border-gray-light p-4 safe-area-bottom">
+            <button onclick="processPayment()" class="w-full py-3 bg-primary text-white rounded-lg font-medium text-base touch-friendly wx-button">
+                生成付费二维码
+            </button>
+        </div>
+    </div>
+
+    <!-- 支付成功模态框 -->
+    <div id="success-modal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center">
+        <div class="bg-white rounded-lg p-6 mx-4 w-full max-w-sm text-center">
+            <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fa fa-check text-white text-2xl"></i>
+            </div>
+            <h2 class="text-xl font-bold mb-2">🎉 支付成功！</h2>
+            <p class="text-gray-medium mb-4">您的订单已生成，请按照指引前往拍摄地点</p>
+            
+            <div class="flex space-x-3">
+                <button onclick="location.href='index_v3.html'" class="flex-1 py-3 bg-gray-100 text-dark rounded-lg font-medium touch-friendly text-sm wx-button">
+                    返回首页
+                </button>
+                <button onclick="location.href='operation-control_v3.html'" class="flex-1 py-3 bg-primary text-white rounded-lg font-medium touch-friendly text-sm wx-button">
+                    前往拍摄
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 微信小程序底部导航栏 -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-light z-50 safe-area-bottom">
+        <div class="flex justify-around items-center h-16">
+            <div class="tab-item flex flex-col items-center justify-center text-gray-medium touch-friendly" onclick="location.href='index_v3.html'">
+                <i class="fa fa-home text-lg mb-1"></i>
+                <span class="text-xs">首页</span>
+            </div>
+            <div class="tab-item flex flex-col items-center justify-center text-gray-medium touch-friendly" onclick="location.href='sample-display_v3.html'">
+                <i class="fa fa-picture-o text-lg mb-1"></i>
+                <span class="text-xs">样片</span>
+            </div>
+            <div class="tab-item flex flex-col items-center justify-center text-gray-medium touch-friendly" onclick="location.href='user-selection_v3.html'">
+                <i class="fa fa-camera text-lg mb-1"></i>
+                <span class="text-xs">拍摄</span>
+            </div>
+            <div class="tab-item flex flex-col items-center justify-center touch-friendly active no-scale">
+                <div class="w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center -mt-6 shadow-lg relative">
+                    <i class="fa fa-user text-lg"></i>
+                </div>
+                <span class="text-xs text-primary font-medium mt-1">订单</span>
+            </div>
+            <div class="tab-item flex flex-col items-center justify-center text-gray-medium touch-friendly" onclick="location.href='after-service_v3.html'">
+                <i class="fa fa-star text-lg mb-1"></i>
+                <span class="text-xs">定制</span>
+            </div>
+        </div>
+    </nav>
+
+    <script>
+        // 存储用户和订单信息
+        let userInfo = {};
+        let orderInfo = {};
+
+        // 小程序样式初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 添加小程序风格的触摸反馈
+            const touchElements = document.querySelectorAll('.touch-friendly');
+            touchElements.forEach(element => {
+                // 跳过有 no-scale 类的元素
+                if (element.classList.contains('no-scale')) {
+                    element.addEventListener('touchstart', function() {
+                        this.style.opacity = '0.7';
+                    });
+                    
+                    element.addEventListener('touchend', function() {
+                        this.style.opacity = '1';
+                    });
+                    
+                    element.addEventListener('touchcancel', function() {
+                        this.style.opacity = '1';
+                    });
+                } else {
+                    element.addEventListener('touchstart', function() {
+                        this.style.opacity = '0.7';
+                        this.style.transform = 'scale(0.95)';
+                    });
+                    
+                    element.addEventListener('touchend', function() {
+                        this.style.opacity = '1';
+                        this.style.transform = 'scale(1)';
+                    });
+                    
+                    element.addEventListener('touchcancel', function() {
+                        this.style.opacity = '1';
+                        this.style.transform = 'scale(1)';
+                    });
+                }
+            });
+
+            loadOrderInfo();
+        });
+
+        // 加载订单信息
+        function loadOrderInfo() {
+            const savedSelection = localStorage.getItem('userSelection');
+            if (savedSelection) {
+                const selectionData = JSON.parse(savedSelection);
+                
+                document.getElementById('order-summary').innerHTML = `
+                    <div class="flex justify-between py-2 border-b border-gray-light">
+                        <span class="text-gray-medium">拍摄地点：</span>
+                        <span class="font-medium">${selectionData.location}</span>
+                    </div>
+                    <div class="flex justify-between py-2 border-b border-gray-light">
+                        <span class="text-gray-medium">拍摄角度：</span>
+                        <span class="font-medium">${selectionData.angles.join('、')}</span>
+                    </div>
+                    <div class="flex justify-between py-2 border-b border-gray-light">
+                        <span class="text-gray-medium">镜头效果：</span>
+                        <span class="font-medium">${selectionData.effects.join('、')}</span>
+                    </div>
+                    <div class="flex justify-between py-2">
+                        <span class="text-gray-medium">拍摄时长：</span>
+                        <span class="font-medium">${selectionData.duration}</span>
+                    </div>
+                `;
+                
+                document.getElementById('pay-amount').textContent = `¥${selectionData.totalPrice}`;
+            } else {
+                // 默认订单信息
+                document.getElementById('order-summary').innerHTML = `
+                    <div class="flex justify-between py-2 border-b border-gray-light">
+                        <span class="text-gray-medium">拍摄地点：</span>
+                        <span class="font-medium">山顶观景台</span>
+                    </div>
+                    <div class="flex justify-between py-2 border-b border-gray-light">
+                        <span class="text-gray-medium">拍摄角度：</span>
+                        <span class="font-medium">高空俯拍</span>
+                    </div>
+                    <div class="flex justify-between py-2 border-b border-gray-light">
+                        <span class="text-gray-medium">镜头效果：</span>
+                        <span class="font-medium">标准拍摄</span>
+                    </div>
+                    <div class="flex justify-between py-2">
+                        <span class="text-gray-medium">拍摄时长：</span>
+                        <span class="font-medium">30秒</span>
+                    </div>
+                `;
+            }
+        }
+
+        // 处理支付
+        function processPayment() {
+            document.getElementById('success-modal').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>

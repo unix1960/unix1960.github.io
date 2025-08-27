@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>拍摄控制 - 无人机自助打卡</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3B82F6',
+                        secondary: '#1E40AF',
+                        accent: '#06B6D4',
+                        dark: '#1E293B',
+                        light: '#F8FAFC',
+                        'gray-medium': '#64748B',
+                        'gray-light': '#E2E8F0',
+                        'blue-primary': '#3B82F6',
+                        'blue-secondary': '#1E40AF',
+                        'blue-light': '#DBEAFE',
+                        'blue-dark': '#1E3A8A',
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .touch-friendly {
+                touch-action: manipulation;
+                -webkit-tap-highlight-color: transparent;
+            }
+            .safe-area-bottom {
+                padding-bottom: constant(safe-area-inset-bottom);
+                padding-bottom: env(safe-area-inset-bottom);
+            }
+            .miniprogram-scroll {
+                -webkit-overflow-scrolling: touch;
+            }
+            .miniprogram-card {
+                box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+                border-radius: 8px;
+            }
+        }
+        
+        @keyframes pulseRing {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 15px rgba(59, 130, 246, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
+        }
+        
+        .pulse-ring {
+            animation: pulseRing 2s infinite;
+        }
+    </style>
+</head>
+<body class="font-inter bg-light text-dark antialiased touch-action-manipulation">
+    <div class="min-h-screen w-full pb-16 safe-area-bottom">
+        <!-- 顶部导航栏 -->
+        <header class="sticky top-0 left-0 right-0 bg-white z-30 border-b border-gray-light">
+            <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+                <button onclick="location.href='user-management_v3.html'" class="text-dark touch-friendly p-2 -ml-2">
+                    <i class="fa fa-arrow-left text-lg"></i>
+                </button>
+                <h1 class="text-lg font-medium">拍摄控制</h1>
+                <button onclick="callService()" class="text-primary touch-friendly p-2 -mr-2">
+                    <i class="fa fa-phone text-lg"></i>
+                </button>
+            </div>
+        </header>
+        
+        <!-- 无人机状态显示 -->
+        <div class="px-4 py-6 bg-gradient-to-br from-primary to-secondary text-white text-center">
+            <div class="mb-4">
+                <div class="relative inline-block">
+                    <div id="drone-icon" class="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto pulse-ring">
+                        <i class="fa fa-paper-plane text-3xl text-white"></i>
+                    </div>
+                </div>
+            </div>
+            <h2 class="text-xl font-bold mb-2">无人机已就位</h2>
+            <p class="text-white/90 text-sm" id="status-text">等待开始拍摄指令</p>
+        </div>
+
+        <!-- 主要控制区域 -->
+        <div class="px-4 py-4 space-y-4 miniprogram-scroll">
+            <!-- 位置确认 -->
+            <div class="miniprogram-card bg-white p-4">
+                <h3 class="font-bold text-base mb-3 flex items-center">
+                    <i class="fa fa-map-marker text-primary mr-2"></i>
+                    位置确认
+                </h3>
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="font-medium" id="location-name">山顶观景台</p>
+                        <p class="text-sm text-gray-medium">GPS定位精度：±2米</p>
+                    </div>
+                    <div class="text-primary">
+                        <i class="fa fa-check-circle text-2xl"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 拍摄进度 -->
+            <div class="miniprogram-card bg-white p-4">
+                <h3 class="font-bold text-base mb-3 flex items-center">
+                    <i class="fa fa-clock-o text-primary mr-2"></i>
+                    拍摄进度
+                </h3>
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm">预计完成时间</span>
+                        <span class="font-medium" id="estimated-time">3分钟</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div id="progress-bar" class="bg-primary h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
+                    </div>
+                    <div class="text-center">
+                        <span class="text-sm text-gray-medium" id="progress-text">准备中...</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 控制按钮 -->
+            <div class="space-y-3">
+                <button id="start-btn" onclick="startShooting()" class="w-full py-4 bg-primary text-white rounded-lg font-bold text-lg touch-friendly">
+                    <i class="fa fa-play mr-2"></i>开始拍摄
+                </button>
+                
+                <div class="grid grid-cols-2 gap-3" id="control-buttons" style="display: none;">
+                    <button onclick="pauseShooting()" class="py-3 bg-accent text-white rounded-lg font-medium touch-friendly">
+                        <i class="fa fa-pause mr-2"></i>暂停
+                    </button>
+                    <button onclick="stopShooting()" class="py-3 bg-gray-500 text-white rounded-lg font-medium touch-friendly">
+                        <i class="fa fa-stop mr-2"></i>停止
+                    </button>
+                </div>
+            </div>
+
+            <!-- 实时反馈 -->
+            <div class="miniprogram-card bg-white p-4">
+                <h3 class="font-bold text-base mb-3 flex items-center">
+                    <i class="fa fa-eye text-primary mr-2"></i>
+                    实时反馈
+                </h3>
+                <div class="space-y-2 text-sm">
+                    <div class="flex justify-between">
+                        <span class="text-gray-medium">电池电量：</span>
+                        <span class="text-primary font-medium">85%</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-medium">信号强度：</span>
+                        <span class="text-primary font-medium">优秀</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-medium">风速：</span>
+                        <span class="text-primary font-medium">2级</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-medium">天气：</span>
+                        <span class="text-primary font-medium">晴朗</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 完成拍摄模态框 -->
+        <div id="complete-modal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center">
+            <div class="bg-white rounded-lg p-6 mx-4 w-full max-w-sm text-center">
+                <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fa fa-check text-white text-2xl"></i>
+                </div>
+                <h2 class="text-xl font-bold mb-2">🎉 拍摄完成！</h2>
+                <p class="text-gray-medium mb-4">作品正在后台处理，稍后可查看成片</p>
+                
+                <div class="flex space-x-3">
+                    <button onclick="location.href='index_v3.html'" class="flex-1 py-3 bg-gray-100 text-dark rounded-lg font-medium touch-friendly text-sm">
+                        返回首页
+                    </button>
+                    <button onclick="location.href='after-service_v3.html'" class="flex-1 py-3 bg-primary text-white rounded-lg font-medium touch-friendly text-sm">
+                        查看成片
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 微信小程序底部导航栏 -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-light z-50 safe-area-bottom">
+        <div class="flex justify-around items-center h-16">
+            <div class="tab-item flex flex-col items-center justify-center text-gray-medium touch-friendly" onclick="location.href='index_v3.html'">
+                <i class="fa fa-home text-lg mb-1"></i>
+                <span class="text-xs">首页</span>
+            </div>
+            <div class="tab-item flex flex-col items-center justify-center text-gray-medium touch-friendly" onclick="location.href='sample-display_v3.html'">
+                <i class="fa fa-picture-o text-lg mb-1"></i>
+                <span class="text-xs">样片</span>
+            </div>
+            <div class="tab-item flex flex-col items-center justify-center text-gray-medium touch-friendly" onclick="location.href='user-selection_v3.html'">
+                <i class="fa fa-camera text-lg mb-1"></i>
+                <span class="text-xs">拍摄</span>
+            </div>
+            <div class="tab-item flex flex-col items-center justify-center text-gray-medium touch-friendly no-scale" onclick="location.href='user-management_v3.html'">
+                <i class="fa fa-user text-lg mb-1"></i>
+                <span class="text-xs">订单</span>
+            </div>
+            <div class="tab-item flex flex-col items-center justify-center touch-friendly active">
+                <div class="w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center -mt-6 shadow-lg relative">
+                    <i class="fa fa-cog text-lg"></i>
+                </div>
+                <span class="text-xs text-primary font-medium mt-1">控制</span>
+            </div>
+        </div>
+    </nav>
+
+    <script>
+        let isRunning = false;
+        let progressTimer = null;
+        let currentProgress = 0;
+
+        // 小程序样式初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 添加小程序风格的触摸反馈
+            const touchElements = document.querySelectorAll('.touch-friendly');
+            touchElements.forEach(element => {
+                // 跳过有 no-scale 类的元素
+                if (element.classList.contains('no-scale')) {
+                    element.addEventListener('touchstart', function() {
+                        this.style.opacity = '0.7';
+                    });
+                    
+                    element.addEventListener('touchend', function() {
+                        this.style.opacity = '1';
+                    });
+                    
+                    element.addEventListener('touchcancel', function() {
+                        this.style.opacity = '1';
+                    });
+                } else {
+                    element.addEventListener('touchstart', function() {
+                        this.style.opacity = '0.7';
+                        this.style.transform = 'scale(0.95)';
+                    });
+                    
+                    element.addEventListener('touchend', function() {
+                        this.style.opacity = '1';
+                        this.style.transform = 'scale(1)';
+                    });
+                    
+                    element.addEventListener('touchcancel', function() {
+                        this.style.opacity = '1';
+                        this.style.transform = 'scale(1)';
+                    });
+                }
+            });
+
+            loadOrderInfo();
+        });
+
+        // 加载订单信息
+        function loadOrderInfo() {
+            const order = JSON.parse(localStorage.getItem('currentOrder') || '{}');
+            if (order.location) {
+                document.getElementById('location-name').textContent = order.location;
+            }
+        }
+
+        // 开始拍摄
+        function startShooting() {
+            isRunning = true;
+            document.getElementById('start-btn').style.display = 'none';
+            document.getElementById('control-buttons').style.display = 'grid';
+            document.getElementById('status-text').textContent = '拍摄进行中...';
+            
+            // 开始进度条动画
+            startProgress();
+            
+            // 小程序触觉反馈
+            if (typeof wx !== 'undefined') {
+                wx.vibrateShort({ type: 'heavy' });
+            }
+        }
+
+        // 开始进度
+        function startProgress() {
+            currentProgress = 0;
+            progressTimer = setInterval(() => {
+                currentProgress += 1;
+                document.getElementById('progress-bar').style.width = currentProgress + '%';
+                document.getElementById('progress-text').textContent = `拍摄中... ${currentProgress}%`;
+                
+                if (currentProgress >= 100) {
+                    clearInterval(progressTimer);
+                    document.getElementById('complete-modal').classList.remove('hidden');
+                }
+            }, 180); // 18秒完成
+        }
+
+        // 暂停拍摄
+        function pauseShooting() {
+            if (progressTimer) {
+                clearInterval(progressTimer);
+                progressTimer = null;
+            }
+            document.getElementById('status-text').textContent = '已暂停';
+            document.getElementById('progress-text').textContent = '暂停中...';
+        }
+
+        // 停止拍摄
+        function stopShooting() {
+            if (progressTimer) {
+                clearInterval(progressTimer);
+                progressTimer = null;
+            }
+            location.href = 'index_v3.html';
+        }
+
+        // 客服电话
+        function callService() {
+            if (typeof wx !== 'undefined') {
+                wx.makePhoneCall({ phoneNumber: '400-888-6666' });
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>样片展示 - 无人机自助打卡</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#07C160',
+                        secondary: '#6366F1',
+                        accent: '#FF6B35',
+                        dark: '#1E293B',
+                        light: '#F8FAFC',
+                        'gray-medium': '#64748B',
+                        'gray-light': '#E2E8F0',
+                        'wx-green': '#07C160',
+                        'wx-blue': '#576B95',
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .touch-friendly {
+                touch-action: manipulation;
+                -webkit-tap-highlight-color: transparent;
+            }
+            .safe-area-bottom {
+                padding-bottom: constant(safe-area-inset-bottom);
+                padding-bottom: env(safe-area-inset-bottom);
+            }
+            .miniprogram-scroll {
+                -webkit-overflow-scrolling: touch;
+            }
+            .miniprogram-card {
+                box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+                border-radius: 8px;
+            }
+            .scrollbar-hide {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+            .scrollbar-hide::-webkit-scrollbar {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body class="font-inter bg-light text-dark antialiased touch-action-manipulation">
+    <div class="min-h-screen w-full pb-16 safe-area-bottom">
+        <!-- 顶部导航栏 -->
+        <header class="sticky top-0 left-0 right-0 bg-white z-30 border-b border-gray-light">
+            <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+                <button onclick="location.href='index_v2.html'" class="text-dark touch-friendly p-2 -ml-2">
+                    <i class="fa fa-arrow-left text-lg"></i>
+                </button>
+                <h1 class="text-lg font-medium">样片展示</h1>
+                <div class="w-8"></div>
+            </div>
+        </header>
+        
+        <!-- 分类筛选 -->
+        <div class="sticky top-12 left-0 right-0 bg-white z-20 px-4 py-3 border-b border-gray-light">
+            <div class="flex space-x-2 overflow-x-auto pb-1 scrollbar-hide">
+                <button class="filter-btn flex-shrink-0 px-4 py-2 bg-primary text-white rounded-full text-sm font-medium whitespace-nowrap touch-friendly" data-filter="all">
+                    <i class="fa fa-th-large mr-1"></i>全部
+                </button>
+                <button class="filter-btn flex-shrink-0 px-4 py-2 bg-gray-100 text-dark rounded-full text-sm font-medium whitespace-nowrap touch-friendly" data-filter="video">
+                    <i class="fa fa-video-camera mr-1"></i>视频样片
+                </button>
+                <button class="filter-btn flex-shrink-0 px-4 py-2 bg-gray-100 text-dark rounded-full text-sm font-medium whitespace-nowrap touch-friendly" data-filter="photo">
+                    <i class="fa fa-camera mr-1"></i>照片样片
+                </button>
+                <button class="filter-btn flex-shrink-0 px-4 py-2 bg-gray-100 text-dark rounded-full text-sm font-medium whitespace-nowrap touch-friendly" data-filter="follow">
+                    <i class="fa fa-user-plus mr-1"></i>自由跟拍
+                </button>
+            </div>
+        </div>
+        
+        <!-- 样片网格 -->
+        <div class="px-4 py-4 miniprogram-scroll">
+            <div class="grid grid-cols-2 gap-3">
+                <!-- 视频样片1 - 高空俯拍全景 -->
+                <div class="gallery-item miniprogram-card overflow-hidden touch-friendly" data-category="video nature" onclick="openModal('高空俯拍全景', '360度全景俯拍，展现壮丽景色', 'https://picsum.photos/id/1018/800/1200', 'video')">
+                    <div class="relative">
+                        <img src="https://picsum.photos/id/1018/800/1200" alt="高空俯拍全景" class="w-full h-32 object-cover">
+                        <div class="absolute top-2 right-2 bg-accent/90 backdrop-blur-sm rounded-full px-2 py-1 text-xs text-white">
+                            <i class="fa fa-play mr-1"></i> 视频
+                        </div>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="w-10 h-10 rounded-full bg-black/50 backdrop-blur-sm flex items-center justify-center">
+                                <i class="fa fa-play text-white"></i>
+                            </div>
+                        </div>
+                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-2">
+                            <div class="text-white text-xs font-medium">15秒</div>
+                        </div>
+                    </div>
+                    <div class="p-3">
+                        <h4 class="font-medium text-sm mb-1">高空俯拍全景</h4>
+                        <p class="text-gray-medium text-xs mb-2">点位A - 山顶观景台</p>
+                        <div class="flex justify-between items-center">
+                            <div class="text-xs text-primary">
+                                <i class="fa fa-star mr-1"></i> 4.9 (128)
+                            </div>
+                            <div class="text-xs text-gray-medium">30次播放</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 视频样片2 - 环绕拍摄 -->
+                <div class="gallery-item miniprogram-card overflow-hidden touch-friendly" data-category="video nature" onclick="openModal('环绕拍摄', '无人机围绕人物环绕拍摄，动感十足', 'https://picsum.photos/id/1031/800/1200', 'video')">
+                    <div class="relative">
+                        <img src="https://picsum.photos/id/1031/800/1200" alt="环绕拍摄" class="w-full h-32 object-cover">
+                        <div class="absolute top-2 right-2 bg-accent/90 backdrop-blur-sm rounded-full px-2 py-1 text-xs text-white">
+                            <i class="fa fa-play mr-1"></i> 视频
+                        </div>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="w-10 h-10 rounded-full bg-black/50 backdrop-blur-sm flex items-center justify-center">
+                                <i class="fa fa-play text-white"></i>
+                            </div>
+                        </div>
+                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-2">
+                            <div class="text-white text-xs font-medium">20秒</div>
+                        </div>
+                    </div>
+                    <div class="p-3">
+                        <h4 class="font-medium text-sm mb-1">环绕拍摄</h4>
+                        <p class="text-gray-medium text-xs mb-2">点位B - 城市阳台</p>
+                        <div class="flex justify-between items-center">
+                            <div class="text-xs text-primary">
+                                <i class="fa fa-star mr-1"></i> 4.8 (96)
+                            </div>
+                            <div class="text-xs text-gray-medium">25次播放</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 照片样片1 - 经典合影 -->
+                <div class="gallery-item miniprogram-card overflow-hidden touch-friendly" data-category="photo nature" onclick="openModal('经典合影', '最佳角度人物合影，背景美不胜收', 'https://picsum.photos/id/1039/800/1200', 'photo')">
+                    <div class="relative">
+                        <img src="https://picsum.photos/id/1039/800/1200" alt="经典合影" class="w-full h-32 object-cover">
+                        <div class="absolute top-2 right-2 bg-primary/90 backdrop-blur-sm rounded-full px-2 py-1 text-xs text-white">
+                            <i class="fa fa-camera mr-1"></i> 照片
+                        </div>
+                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-2">
+                            <div class="text-white text-xs font-medium">高清</div>
+                        </div>
+                    </div>
+                    <div class="p-3">
+                        <h4 class="font-medium text-sm mb-1">经典合影</h4>
+                        <p class="text-gray-medium text-xs mb-2">点位C - 湖畔公园</p>
+                        <div class="flex justify-between items-center">
+                            <div class="text-xs text-primary">
+                                <i class="fa fa-star mr-1"></i> 4.7 (82)
+                            </div>
+                            <div class="text-xs text-gray-medium">15张照片</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 自由跟拍样片 -->
+                <div class="gallery-item miniprogram-card overflow-hidden touch-friendly" data-category="follow video" onclick="openModal('自由跟拍', '智能跟随拍摄，记录自然状态', 'https://picsum.photos/id/1073/800/1200', 'video')">
+                    <div class="relative">
+                        <img src="https://picsum.photos/id/1073/800/1200" alt="自由跟拍" class="w-full h-32 object-cover">
+                        <div class="absolute top-2 left-2 bg-gradient-to-r from-accent to-accent/80 rounded-full px-2 py-1 text-xs text-white font-medium">
+                            🔥 自由跟拍
+                        </div>
+                        <div class="absolute top-2 right-2 bg-accent/90 backdrop-blur-sm rounded-full px-2 py-1 text-xs text-white">
+                            <i class="fa fa-play mr-1"></i> 视频
+                        </div>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="w-10 h-10 rounded-full bg-black/50 backdrop-blur-sm flex items-center justify-center">
+                                <i class="fa fa-play text-white"></i>
+                            </div>
+                        </div>
+                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-2">
+                            <div class="text-white text-xs font-medium">60秒</div>
+                        </div>
+                    </div>
+                    <div class="p-3">
+                        <h4 class="font-medium text-sm mb-1">自由跟拍</h4>
+                        <p class="text-gray-medium text-xs mb-2">点位D - 文化中心</p>
+                        <div class="flex justify-between items-center">
+                            <div class="text-xs text-primary">
+                                <i class="fa fa-star mr-1"></i> 4.9 (156)
+                            </div>
+                            <div class="text-xs text-accent font-medium">热门</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 照片样片2 - 创意角度 -->
+                <div class="gallery-item miniprogram-card overflow-hidden touch-friendly" data-category="photo city" onclick="openModal('创意角度', '独特视角创意拍摄，与众不同', 'https://picsum.photos/id/1015/800/1200', 'photo')">
+                    <div class="relative">
+                        <img src="https://picsum.photos/id/1015/800/1200" alt="创意角度" class="w-full h-32 object-cover">
+                        <div class="absolute top-2 right-2 bg-primary/90 backdrop-blur-sm rounded-full px-2 py-1 text-xs text-white">
+                            <i class="fa fa-camera mr-1"></i> 照片
+                        </div>
+                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-2">
+                            <div class="text-white text-xs font-medium">创意</div>
+                        </div>
+                    </div>
+                    <div class="p-3">
+                        <h4 class="font-medium text-sm mb-1">创意角度</h4>
+                        <p class="text-gray-medium text-xs mb-2">点位E - 云顶步道</p>
+                        <div class="flex justify-between items-center">
+                            <div class="text-xs text-primary">
+                                <i class="fa fa-star mr-1"></i> 4.9 (203)
+                            </div>
+                            <div class="text-xs text-gray-medium">20张照片</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 视频样片3 - 延时摄影 -->
+                <div class="gallery-item miniprogram-card overflow-hidden touch-friendly" data-category="video city" onclick="openModal('延时摄影', '时光流转，记录美好瞬间', 'https://picsum.photos/id/1019/800/1200', 'video')">
+                    <div class="relative">
+                        <img src="https://picsum.photos/id/1019/800/1200" alt="延时摄影" class="w-full h-32 object-cover">
+                        <div class="absolute top-2 right-2 bg-accent/90 backdrop-blur-sm rounded-full px-2 py-1 text-xs text-white">
+                            <i class="fa fa-play mr-1"></i> 视频
+                        </div>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="w-10 h-10 rounded-full bg-black/50 backdrop-blur-sm flex items-center justify-center">
+                                <i class="fa fa-play text-white"></i>
+                            </div>
+                        </div>
+                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-2">
+                            <div class="text-white text-xs font-medium">30秒</div>
+                        </div>
+                    </div>
+                    <div class="p-3">
+                        <h4 class="font-medium text-sm mb-1">延时摄影</h4>
+                        <p class="text-gray-medium text-xs mb-2">点位F - 海滨公园</p>
+                        <div class="flex justify-between items-center">
+                            <div class="text-xs text-primary">
+                                <i class="fa fa-star mr-1"></i> 4.8 (89)
+                            </div>
+                            <div class="text-xs text-gray-medium">18次播放</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 加载更多 -->
+            <div class="text-center py-8 mb-16">
+                <button id="load-more" class="px-6 py-3 bg-white miniprogram-card text-gray-medium font-medium touch-friendly">
+                    <i class="fa fa-refresh mr-2"></i>加载更多样片
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 样片详情模态框 -->
+    <div id="gallery-detail-modal" class="fixed inset-0 bg-black/90 z-50 hidden flex items-center justify-center">
+        <button id="close-gallery-detail" class="fixed top-8 right-4 text-white p-2 z-10 touch-friendly">
+            <i class="fa fa-times text-xl"></i>
+        </button>
+        <div class="w-full max-w-sm mx-4">
+            <div class="relative mb-4 rounded-lg overflow-hidden">
+                <img id="gallery-detail-img" src="" alt="样片详情" class="w-full h-64 object-cover">
+                <div id="play-overlay" class="absolute inset-0 flex items-center justify-center hidden">
+                    <div class="w-16 h-16 rounded-full bg-accent/80 flex items-center justify-center">
+                        <i class="fa fa-play text-white text-xl"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center">
+                <h2 id="gallery-detail-title" class="text-white text-lg font-bold mb-2">样片标题</h2>
+                <p id="gallery-detail-desc" class="text-white/80 text-sm mb-4">样片描述</p>
+                <div class="flex justify-center space-x-4 mb-4">
+                    <div class="text-white text-sm">
+                        <i class="fa fa-camera mr-1"></i> <span id="detail-type">照片</span>
+                    </div>
+                    <div class="text-white text-sm">
+                        <i class="fa fa-star mr-1"></i> <span id="detail-rating">4.9</span>
+                    </div>
+                </div>
+                <button onclick="location.href='user-selection_v2.html'" class="w-full py-3 bg-primary text-white rounded-lg font-medium touch-friendly">
+                    <i class="fa fa-rocket mr-2"></i>选择此效果立即拍摄
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 微信小程序底部导航栏 -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-light z-50 safe-area-bottom">
+        <div class="flex justify-around items-center h-16">
+            <div class="tab-item flex flex-col items-center justify-center text-gray-medium touch-friendly" onclick="location.href='index_v2.html'">
+                <i class="fa fa-home text-lg mb-1"></i>
+                <span class="text-xs">首页</span>
+            </div>
+            <div class="tab-item flex flex-col items-center justify-center text-primary touch-friendly active">
+                <i class="fa fa-picture-o text-lg mb-1"></i>
+                <span class="text-xs">样片</span>
+            </div>
+            <div class="tab-item flex flex-col items-center justify-center touch-friendly" onclick="location.href='user-selection_v2.html'">
+                <div class="w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center -mt-6 shadow-lg relative">
+                    <i class="fa fa-camera text-lg"></i>
+                </div>
+                <span class="text-xs text-primary font-medium mt-1">拍摄</span>
+            </div>
+            <div class="tab-item flex flex-col items-center justify-center text-gray-medium touch-friendly no-scale" onclick="location.href='user-management_v2.html'">
+                <i class="fa fa-user text-lg mb-1"></i>
+                <span class="text-xs">订单</span>
+            </div>
+            <div class="tab-item flex flex-col items-center justify-center text-gray-medium touch-friendly" onclick="location.href='after-service_v2.html'">
+                <i class="fa fa-star text-lg mb-1"></i>
+                <span class="text-xs">定制</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- JavaScript交互代码 -->
+    <script>
+        // DOM元素获取
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const galleryItems = document.querySelectorAll('.gallery-item');
+        const galleryDetailModal = document.getElementById('gallery-detail-modal');
+        const closeGalleryDetail = document.getElementById('close-gallery-detail');
+        const galleryDetailImg = document.getElementById('gallery-detail-img');
+        const galleryDetailTitle = document.getElementById('gallery-detail-title');
+        const galleryDetailDesc = document.getElementById('gallery-detail-desc');
+        const detailType = document.getElementById('detail-type');
+        const detailRating = document.getElementById('detail-rating');
+        const playOverlay = document.getElementById('play-overlay');
+        const loadMore = document.getElementById('load-more');
+        
+        // 小程序样式初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 添加小程序风格的触摸反馈
+            const touchElements = document.querySelectorAll('.touch-friendly');
+            touchElements.forEach(element => {
+                // 跳过有 no-scale 类的元素
+                if (element.classList.contains('no-scale')) {
+                    element.addEventListener('touchstart', function() {
+                        this.style.opacity = '0.7';
+                    });
+                    
+                    element.addEventListener('touchend', function() {
+                        this.style.opacity = '1';
+                    });
+                    
+                    element.addEventListener('touchcancel', function() {
+                        this.style.opacity = '1';
+                    });
+                } else {
+                    element.addEventListener('touchstart', function() {
+                        this.style.opacity = '0.7';
+                        this.style.transform = 'scale(0.95)';
+                    });
+                    
+                    element.addEventListener('touchend', function() {
+                        this.style.opacity = '1';
+                        this.style.transform = 'scale(1)';
+                    });
+                    
+                    element.addEventListener('touchcancel', function() {
+                        this.style.opacity = '1';
+                        this.style.transform = 'scale(1)';
+                    });
+                }
+            });
+        });
+        
+        // 分类筛选功能
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                // 更新按钮状态
+                filterBtns.forEach(b => {
+                    b.classList.remove('bg-primary', 'text-white');
+                    b.classList.add('bg-gray-100', 'text-dark');
+                });
+                this.classList.remove('bg-gray-100', 'text-dark');
+                this.classList.add('bg-primary', 'text-white');
+                
+                // 筛选逻辑
+                const filter = this.getAttribute('data-filter');
+                galleryItems.forEach(item => {
+                    const categories = item.getAttribute('data-category').split(' ');
+                    if (filter === 'all' || categories.includes(filter)) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+                
+                // 小程序分析上报
+                if (typeof wx !== 'undefined') {
+                    wx.reportAnalytics('filter_samples', {
+                        filter: filter,
+                        timestamp: Date.now()
+                    });
+                }
+            });
+        });
+        
+        // 打开样片详情模态框
+        function openModal(title, desc, imgSrc, type) {
+            galleryDetailTitle.textContent = title;
+            galleryDetailDesc.textContent = desc;
+            galleryDetailImg.src = imgSrc;
+            detailType.textContent = type === 'video' ? '视频' : '照片';
+            detailRating.textContent = (Math.random() * 0.3 + 4.6).toFixed(1);
+            
+            if (type === 'video') {
+                playOverlay.classList.remove('hidden');
+            } else {
+                playOverlay.classList.add('hidden');
+            }
+            
+            galleryDetailModal.classList.remove('hidden');
+            
+            // 阻止背景滚动
+            document.body.style.overflow = 'hidden';
+            
+            // 小程序分析上报
+            if (typeof wx !== 'undefined') {
+                wx.reportAnalytics('view_sample_detail', {
+                    title: title,
+                    type: type,
+                    timestamp: Date.now()
+                });
+            }
+        }
+        
+        // 关闭样片详情
+        closeGalleryDetail.addEventListener('click', function() {
+            galleryDetailModal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        });
+        
+        // 点击模态框外部关闭
+        galleryDetailModal.addEventListener('click', function(e) {
+            if (e.target === this) {
+                galleryDetailModal.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            }
+        });
+        
+        // 加载更多功能
+        loadMore.addEventListener('click', function() {
+            this.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i>加载中...';
+            this.disabled = true;
+            
+            // 模拟加载更多
+            setTimeout(() => {
+                this.innerHTML = '<i class="fa fa-refresh mr-2"></i>加载更多样片';
+                this.disabled = false;
+                
+                // 小程序提示
+                if (typeof wx !== 'undefined') {
+                    wx.showToast({
+                        title: '已加载更多样片',
+                        icon: 'success',
+                        duration: 1500
+                    });
+                }
+            }, 1500);
+        });
+    </script>
+</body>
+</html>

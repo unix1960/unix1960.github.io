@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>成片定制 - 无人机自助打卡</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3B82F6',
+                        secondary: '#1E40AF',
+                        accent: '#06B6D4',
+                        dark: '#1E293B',
+                        light: '#F8FAFC',
+                        'gray-medium': '#64748B',
+                        'gray-light': '#E2E8F0',
+                        'blue-primary': '#3B82F6',
+                        'blue-secondary': '#1E40AF',
+                        'blue-light': '#DBEAFE',
+                        'blue-dark': '#1E3A8A',
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .touch-friendly {
+                touch-action: manipulation;
+                -webkit-tap-highlight-color: transparent;
+            }
+            .safe-area-bottom {
+                padding-bottom: constant(safe-area-inset-bottom);
+                padding-bottom: env(safe-area-inset-bottom);
+            }
+            .miniprogram-scroll {
+                -webkit-overflow-scrolling: touch;
+            }
+            .miniprogram-card {
+                box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+                border-radius: 8px;
+            }
+        }
+    </style>
+</head>
+<body class="font-inter bg-light text-dark antialiased touch-action-manipulation">
+    <div class="min-h-screen w-full pb-20 safe-area-bottom">
+        <!-- 顶部导航栏 -->
+        <header class="sticky top-0 left-0 right-0 bg-white z-30 border-b border-gray-light">
+            <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+                <button onclick="location.href='operation-control_v3.html'" class="text-dark touch-friendly p-2 -ml-2">
+                    <i class="fa fa-arrow-left text-lg"></i>
+                </button>
+                <h1 class="text-lg font-medium">成片定制</h1>
+                <a href="tel:400-888-6666" class="text-primary touch-friendly p-2 -mr-2">
+                    <i class="fa fa-phone text-lg"></i>
+                </a>
+            </div>
+        </header>
+        
+        <!-- 定制内容 -->
+        <div class="px-4 py-4 space-y-4 miniprogram-scroll">
+            <!-- 选择订单 -->
+            <div class="miniprogram-card bg-white p-4">
+                <h2 class="text-base font-medium mb-3 flex items-center">
+                    <i class="fa fa-list-alt text-primary mr-2"></i>
+                    选择订单
+                </h2>
+                <div id="order-card" class="border border-primary rounded-lg p-3 bg-primary/5">
+                    <div class="flex items-center space-x-3">
+                        <img src="https://picsum.photos/id/1039/100/100" alt="订单预览" class="w-12 h-12 object-cover rounded-lg">
+                        <div class="flex-1">
+                            <h3 class="font-medium text-sm">基础拍摄套餐</h3>
+                            <p class="text-gray-medium text-xs" id="order-location">点位A - 山顶观景台</p>
+                            <p class="text-gray-medium text-xs">订单号: <span id="order-id">DC1703892000000</span></p>
+                        </div>
+                        <i class="fa fa-check text-primary"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 滤镜与特效 -->
+            <div class="miniprogram-card bg-gradient-to-br from-white to-gray-50 p-5 shadow-lg">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="font-semibold text-lg flex items-center">
+                        <div class="w-8 h-8 bg-gradient-to-r from-primary to-accent rounded-lg flex items-center justify-center mr-3">
+                            <i class="fa fa-magic text-white"></i>
+                        </div>
+                        滤镜与特效
+                    </h3>
+                    <div class="flex items-center space-x-1 text-xs text-gray-500">
+                        <i class="fa fa-eye"></i>
+                        <span>预览</span>
+                    </div>
+                </div>
+                
+                <!-- 滤镜选择 -->
+                <div class="mb-6">
+                    <div class="flex items-center justify-between mb-3">
+                        <h4 class="font-medium text-sm text-gray-700 flex items-center">
+                            <i class="fa fa-filter text-primary mr-2"></i>
+                            选择滤镜
+                        </h4>
+                        <span class="text-xs text-primary bg-primary/10 px-2 py-1 rounded-full">共6种</span>
+                    </div>
+                    <div class="grid grid-cols-3 gap-3">
+                        <div class="filter-item group relative border-2 border-primary bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl p-3 text-center cursor-pointer touch-friendly transition-all duration-300 shadow-md" onclick="selectFilter(this)">
+                            <div class="w-10 h-10 bg-gradient-to-br from-orange-300 to-orange-500 rounded-full mx-auto mb-2 shadow-inner flex items-center justify-center">
+                                <i class="fa fa-sun text-white text-sm"></i>
+                            </div>
+                            <p class="text-xs font-semibold text-orange-700">温暖</p>
+                            <div class="absolute -top-1 -right-1 w-4 h-4 bg-primary rounded-full flex items-center justify-center">
+                                <i class="fa fa-check text-white text-xs"></i>
+                            </div>
+                        </div>
+                        <div class="filter-item group hover:shadow-lg border border-gray-200 bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-3 text-center cursor-pointer touch-friendly transition-all duration-300" onclick="selectFilter(this)">
+                            <div class="w-10 h-10 bg-gradient-to-br from-blue-300 to-blue-500 rounded-full mx-auto mb-2 shadow-inner flex items-center justify-center">
+                                <i class="fa fa-snowflake-o text-white text-sm"></i>
+                            </div>
+                            <p class="text-xs font-semibold text-blue-700">清冷</p>
+                        </div>
+                        <div class="filter-item group hover:shadow-lg border border-gray-200 bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-3 text-center cursor-pointer touch-friendly transition-all duration-300" onclick="selectFilter(this)">
+                            <div class="w-10 h-10 bg-gradient-to-br from-green-300 to-green-500 rounded-full mx-auto mb-2 shadow-inner flex items-center justify-center">
+                                <i class="fa fa-leaf text-white text-sm"></i>
+                            </div>
+                            <p class="text-xs font-semibold text-green-700">自然</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 特效选择 -->
+                <div>
+                    <div class="flex items-center justify-between mb-3">
+                        <h4 class="font-medium text-sm text-gray-700 flex items-center">
+                            <i class="fa fa-flash text-primary mr-2"></i>
+                            添加特效
+                        </h4>
+                        <span class="text-xs text-amber-600 bg-amber-50 px-2 py-1 rounded-full">可多选</span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <label class="group relative flex items-center p-3 bg-gradient-to-r from-yellow-50 to-amber-50 rounded-xl border border-yellow-200 cursor-pointer touch-friendly transition-all duration-300 hover:shadow-md">
+                            <input type="checkbox" class="sr-only peer">
+                            <div class="relative flex items-center justify-center w-5 h-5 border-2 border-yellow-400 rounded-md peer-checked:bg-yellow-400 peer-checked:border-yellow-400 transition-all duration-200">
+                                <i class="fa fa-check text-white text-xs opacity-0 peer-checked:opacity-100 transition-opacity duration-200"></i>
+                            </div>
+                            <div class="flex items-center ml-3">
+                                <div class="w-6 h-6 bg-gradient-to-br from-yellow-300 to-amber-400 rounded-lg flex items-center justify-center mr-2">
+                                    <i class="fa fa-star text-white text-xs"></i>
+                                </div>
+                                <span class="text-sm font-medium text-gray-700">光斑效果</span>
+                            </div>
+                        </label>
+                        <label class="group relative flex items-center p-3 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl border border-blue-200 cursor-pointer touch-friendly transition-all duration-300 hover:shadow-md">
+                            <input type="checkbox" class="sr-only peer">
+                            <div class="relative flex items-center justify-center w-5 h-5 border-2 border-blue-400 rounded-md peer-checked:bg-blue-400 peer-checked:border-blue-400 transition-all duration-200">
+                                <i class="fa fa-check text-white text-xs opacity-0 peer-checked:opacity-100 transition-opacity duration-200"></i>
+                            </div>
+                            <div class="flex items-center ml-3">
+                                <div class="w-6 h-6 bg-gradient-to-br from-blue-300 to-cyan-400 rounded-lg flex items-center justify-center mr-2">
+                                    <i class="fa fa-tint text-white text-xs"></i>
+                                </div>
+                                <span class="text-sm font-medium text-gray-700">流水特效</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 定制进度 -->
+            <div class="miniprogram-card bg-white p-4">
+                <h3 class="font-bold text-base mb-3 flex items-center">
+                    <i class="fa fa-clock-o text-primary mr-2"></i>
+                    定制进度
+                </h3>
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-sm text-gray-medium">处理进度</span>
+                    <span class="text-sm font-medium text-primary" id="progress-text">已完成</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2 mb-4">
+                    <div class="bg-gradient-to-r from-primary to-accent h-2 rounded-full" style="width: 100%"></div>
+                </div>
+                <p class="text-xs text-gray-medium">预计生成时间：3-5分钟</p>
+            </div>
+        </div>
+        
+        <!-- 底部确认按钮 -->
+        <div class="fixed bottom-16 left-0 right-0 bg-white border-t border-gray-light p-4 safe-area-bottom">
+            <button onclick="confirmCustomization()" id="confirm-customization" class="w-full py-3 bg-primary text-white rounded-lg font-medium text-base touch-friendly">
+                确认定制并生成成片
+            </button>
+        </div>
+    </div>
+
+    <!-- 微信小程序底部导航栏 -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-light z-50 safe-area-bottom">
+        <div class="flex justify-around items-center h-16">
+            <div class="tab-item flex flex-col items-center justify-center text-gray-medium touch-friendly" onclick="location.href='index_v3.html'">
+                <i class="fa fa-home text-lg mb-1"></i>
+                <span class="text-xs">首页</span>
+            </div>
+            <div class="tab-item flex flex-col items-center justify-center text-gray-medium touch-friendly" onclick="location.href='sample-display_v3.html'">
+                <i class="fa fa-picture-o text-lg mb-1"></i>
+                <span class="text-xs">样片</span>
+            </div>
+            <div class="tab-item flex flex-col items-center justify-center text-gray-medium touch-friendly" onclick="location.href='user-selection_v3.html'">
+                <i class="fa fa-camera text-lg mb-1"></i>
+                <span class="text-xs">拍摄</span>
+            </div>
+            <div class="tab-item flex flex-col items-center justify-center text-gray-medium touch-friendly no-scale" onclick="location.href='user-management_v3.html'">
+                <i class="fa fa-user text-lg mb-1"></i>
+                <span class="text-xs">订单</span>
+            </div>
+            <div class="tab-item flex flex-col items-center justify-center touch-friendly active">
+                <div class="w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center -mt-6 shadow-lg relative">
+                    <i class="fa fa-star text-lg"></i>
+                </div>
+                <span class="text-xs text-primary font-medium mt-1">定制</span>
+            </div>
+        </div>
+    </nav>
+
+    <script>
+        // 存储定制选择
+        let selectedTemplate = '简约风格';
+        let selectedMusic = '旅途风光';
+        let selectedFilter = '温暖';
+
+        // 小程序样式初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 添加小程序风格的触摸反馈
+            const touchElements = document.querySelectorAll('.touch-friendly');
+            touchElements.forEach(element => {
+                // 跳过有 no-scale 类的元素
+                if (element.classList.contains('no-scale')) {
+                    element.addEventListener('touchstart', function() {
+                        this.style.opacity = '0.7';
+                    });
+                    
+                    element.addEventListener('touchend', function() {
+                        this.style.opacity = '1';
+                    });
+                    
+                    element.addEventListener('touchcancel', function() {
+                        this.style.opacity = '1';
+                    });
+                } else {
+                    element.addEventListener('touchstart', function() {
+                        this.style.opacity = '0.7';
+                        this.style.transform = 'scale(0.95)';
+                    });
+                    
+                    element.addEventListener('touchend', function() {
+                        this.style.opacity = '1';
+                        this.style.transform = 'scale(1)';
+                    });
+                    
+                    element.addEventListener('touchcancel', function() {
+                        this.style.opacity = '1';
+                        this.style.transform = 'scale(1)';
+                    });
+                }
+            });
+
+            loadOrderInfo();
+        });
+
+        // 加载订单信息
+        function loadOrderInfo() {
+            const order = JSON.parse(localStorage.getItem('currentOrder') || '{}');
+            if (order.location) {
+                document.getElementById('order-location').textContent = order.location;
+            }
+        }
+
+        // 选择滤镜
+        function selectFilter(element) {
+            // 移除其他选中状态
+            document.querySelectorAll('.filter-item').forEach(item => {
+                item.classList.remove('border-2', 'border-primary', 'shadow-md');
+                item.classList.add('border', 'border-gray-200');
+                // 移除选中标记
+                const checkMark = item.querySelector('.absolute');
+                if (checkMark) {
+                    checkMark.remove();
+                }
+            });
+            
+            // 添加选中状态
+            element.classList.remove('border', 'border-gray-200');
+            element.classList.add('border-2', 'border-primary', 'shadow-md');
+            
+            // 添加选中标记
+            if (!element.querySelector('.absolute')) {
+                const checkMark = document.createElement('div');
+                checkMark.className = 'absolute -top-1 -right-1 w-4 h-4 bg-primary rounded-full flex items-center justify-center';
+                checkMark.innerHTML = '<i class="fa fa-check text-white text-xs"></i>';
+                element.appendChild(checkMark);
+            }
+            
+            selectedFilter = element.querySelector('p').textContent;
+            
+            // 小程序振动反馈
+            if (typeof wx !== 'undefined') {
+                wx.vibrateShort({ type: 'light' });
+            }
+        }
+
+        // 确认定制
+        function confirmCustomization() {
+            const button = document.getElementById('confirm-customization');
+            button.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i> 生成中...';
+            button.disabled = true;
+            
+            setTimeout(() => {
+                if (typeof wx !== 'undefined') {
+                    wx.showToast({
+                        title: '定制完成！',
+                        icon: 'success',
+                        duration: 2000
+                    });
+                }
+                
+                setTimeout(() => {
+                    location.href = 'index_v3.html';
+                }, 2000);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

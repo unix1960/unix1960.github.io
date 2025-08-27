@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>无人机自助打卡 - DroneSelfie</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3B82F6',
+                        secondary: '#1E40AF',
+                        accent: '#06B6D4',
+                        dark: '#1E293B',
+                        light: '#F8FAFC',
+                        'gray-medium': '#64748B',
+                        'gray-light': '#E2E8F0',
+                        'blue-primary': '#3B82F6',
+                        'blue-secondary': '#1E40AF',
+                        'blue-light': '#DBEAFE',
+                        'blue-dark': '#1E3A8A',
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            }
+            .touch-friendly {
+                touch-action: manipulation;
+                -webkit-tap-highlight-color: transparent;
+            }
+            .safe-area-bottom {
+                padding-bottom: constant(safe-area-inset-bottom);
+                padding-bottom: env(safe-area-inset-bottom);
+            }
+            .miniprogram-scroll {
+                -webkit-overflow-scrolling: touch;
+            }
+            .miniprogram-card {
+                box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+                border-radius: 8px;
+            }
+            .wx-button {
+                border-radius: 4px;
+                font-size: 16px;
+                line-height: 1.4;
+            }
+        }
+    </style>
+</head>
+<body class="font-inter bg-light text-dark antialiased touch-action-manipulation">
+    <div class="min-h-screen w-full pb-16 safe-area-bottom">
+        <!-- 主视觉区域 -->
+        <section class="relative h-96 overflow-hidden">
+            <img src="https://picsum.photos/id/1018/800/600" alt="壮丽山景" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent"></div>
+            <div class="absolute inset-0 flex flex-col justify-center items-center text-center px-4">
+                <div class="mb-4">
+                    <i class="fa fa-paper-plane text-4xl text-white mb-2 text-shadow"></i>
+                </div>
+                <h1 class="text-3xl font-bold text-white mb-3 text-shadow">无人机自助打卡</h1>
+                <p class="text-white/90 text-sm mb-6 max-w-xs mx-auto">专业无人机自动拍摄，AI智能剪辑，留下精彩瞬间</p>
+                <button onclick="location.href='user-selection_v3.html'" class="px-6 py-3 bg-primary text-white rounded-full font-medium hover:bg-secondary transition-colors touch-friendly">
+                    <i class="fa fa-camera mr-2"></i>立即体验
+                </button>
+            </div>
+        </section>
+        
+        <!-- 功能入口网格 -->
+        <section class="px-4 py-6">
+            <div class="grid grid-cols-2 gap-4">
+                <!-- 样片展示 -->
+                <div class="miniprogram-card bg-white p-5 text-center touch-friendly" onclick="location.href='sample-display_v3.html'">
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center mx-auto mb-3">
+                        <i class="fa fa-picture-o text-primary text-xl"></i>
+                    </div>
+                    <h3 class="font-medium text-dark mb-1">样片展示</h3>
+                    <p class="text-gray-medium text-xs leading-relaxed">查看拍摄效果样片</p>
+                </div>
+
+                <!-- 价格说明 -->
+                <div class="miniprogram-card bg-white p-5 text-center touch-friendly" onclick="location.href='info-display_v3.html'">
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-accent/20 to-accent/10 flex items-center justify-center mx-auto mb-3">
+                        <i class="fa fa-tag text-accent text-xl"></i>
+                    </div>
+                    <h3 class="font-medium text-dark mb-1">价格说明</h3>
+                    <p class="text-gray-medium text-xs leading-relaxed">查看套餐价格详情</p>
+                </div>
+
+                <!-- 开始拍摄 -->
+                <div class="miniprogram-card bg-gradient-to-br from-primary to-secondary p-5 text-center text-white touch-friendly" onclick="location.href='user-selection_v3.html'">
+                    <div class="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center mx-auto mb-3">
+                        <i class="fa fa-camera text-white text-xl"></i>
+                    </div>
+                    <h3 class="font-medium mb-1">开始拍摄</h3>
+                    <p class="text-white/80 text-xs leading-relaxed">选择拍摄内容开始</p>
+                </div>
+
+                <!-- 我的订单 -->
+                <div class="miniprogram-card bg-white p-5 text-center touch-friendly" onclick="location.href='user-management_v3.html'">
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-primary/20 to-blue-primary/10 flex items-center justify-center mx-auto mb-3">
+                        <i class="fa fa-list-alt text-blue-primary text-xl"></i>
+                    </div>
+                    <h3 class="font-medium text-dark mb-1">我的订单</h3>
+                    <p class="text-gray-medium text-xs leading-relaxed">查看订单状态</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 三步流程说明 -->
+        <section class="px-4 py-6 bg-gradient-to-r from-blue-light to-blue-50">
+            <h2 class="text-center text-lg font-bold text-dark mb-6">三步完成拍摄</h2>
+            <div class="space-y-4">
+                <div class="flex items-center space-x-4">
+                    <div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold text-sm flex-shrink-0">1</div>
+                    <div>
+                        <h3 class="font-medium text-dark">选择套餐</h3>
+                        <p class="text-gray-medium text-sm">选择拍摄点位和套餐内容</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold text-sm flex-shrink-0">2</div>
+                    <div>
+                        <h3 class="font-medium text-dark">到达地点</h3>
+                        <p class="text-gray-medium text-sm">按导航到达拍摄点确认位置</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold text-sm flex-shrink-0">3</div>
+                    <div>
+                        <h3 class="font-medium text-dark">自动拍摄</h3>
+                        <p class="text-gray-medium text-sm">无人机自动拍摄并生成精美作品</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 热门打卡点 -->
+        <section class="px-4 py-6">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-bold">热门打卡点</h2>
+                <button onclick="location.href='sample-display_v3.html'" class="text-primary text-sm touch-friendly">
+                    更多 <i class="fa fa-angle-right"></i>
+                </button>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+                <div class="miniprogram-card overflow-hidden touch-friendly" onclick="location.href='sample-display_v3.html'">
+                    <img src="https://picsum.photos/id/1018/400/300" alt="山顶观景台" class="w-full h-24 object-cover">
+                    <div class="p-3">
+                        <h4 class="font-medium text-sm">山顶观景台</h4>
+                        <p class="text-gray-medium text-xs">点位A - 全景俯拍</p>
+                    </div>
+                </div>
+                <div class="miniprogram-card overflow-hidden touch-friendly" onclick="location.href='sample-display_v3.html'">
+                    <img src="https://picsum.photos/id/1031/400/300" alt="湖畔公园" class="w-full h-24 object-cover">
+                    <div class="p-3">
+                        <h4 class="font-medium text-sm">湖畔公园</h4>
+                        <p class="text-gray-medium text-xs">点位B - 环绕拍摄</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 联系我们 -->
+        <section class="mx-4 mb-6 bg-gradient-to-r from-primary to-secondary rounded-lg p-4 text-white">
+            <h3 class="font-bold mb-3">需要帮助？</h3>
+            <div class="flex space-x-3">
+                <button onclick="callService()" class="flex-1 bg-white/20 backdrop-blur-sm text-white py-2 rounded-lg text-sm font-medium touch-friendly">
+                    <i class="fa fa-phone mr-1"></i>客服电话
+                </button>
+                <button onclick="addWechat()" class="flex-1 bg-white/20 backdrop-blur-sm text-white py-2 rounded-lg text-sm font-medium touch-friendly">
+                    <i class="fa fa-wechat mr-1"></i>企业微信
+                </button>
+            </div>
+        </section>
+    </div>
+
+    <!-- 微信小程序底部导航栏 -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-light z-50 safe-area-bottom">
+        <div class="flex justify-around items-center h-16">
+            <div class="tab-item flex flex-col items-center justify-center text-primary touch-friendly active" data-page="index">
+                <i class="fa fa-home text-lg mb-1"></i>
+                <span class="text-xs">首页</span>
+            </div>
+            <div class="tab-item flex flex-col items-center justify-center text-gray-medium touch-friendly" data-page="sample-display" onclick="location.href='sample-display_v3.html'">
+                <i class="fa fa-picture-o text-lg mb-1"></i>
+                <span class="text-xs">样片</span>
+            </div>
+            <div class="tab-item flex flex-col items-center justify-center touch-friendly" data-page="user-selection" onclick="location.href='user-selection_v3.html'">
+                <div class="w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center -mt-6 shadow-lg relative">
+                    <i class="fa fa-camera text-lg"></i>
+                </div>
+                <span class="text-xs text-primary font-medium mt-1">拍摄</span>
+            </div>
+            <div class="tab-item flex flex-col items-center justify-center text-gray-medium touch-friendly no-scale" data-page="user-management" onclick="location.href='user-management_v3.html'">
+                <i class="fa fa-user text-lg mb-1"></i>
+                <span class="text-xs">订单</span>
+            </div>
+            <div class="tab-item flex flex-col items-center justify-center text-gray-medium touch-friendly" data-page="after-service" onclick="location.href='after-service_v3.html'">
+                <i class="fa fa-star text-lg mb-1"></i>
+                <span class="text-xs">定制</span>
+            </div>
+        </div>
+    </nav>
+
+    <script>
+        // 小程序适配
+        document.addEventListener('DOMContentLoaded', function() {
+            // 设置页面基础样式
+            document.body.style.paddingBottom = 'env(safe-area-inset-bottom, 60px)';
+            
+            // 添加小程序风格的触摸反馈
+            const touchElements = document.querySelectorAll('.touch-friendly');
+            touchElements.forEach(element => {
+                // 跳过有 no-scale 类的元素
+                if (element.classList.contains('no-scale')) {
+                    element.addEventListener('touchstart', function() {
+                        this.style.opacity = '0.7';
+                    });
+                    
+                    element.addEventListener('touchend', function() {
+                        this.style.opacity = '1';
+                    });
+                    
+                    element.addEventListener('touchcancel', function() {
+                        this.style.opacity = '1';
+                    });
+                } else {
+                    element.addEventListener('touchstart', function() {
+                        this.style.opacity = '0.7';
+                        this.style.transform = 'scale(0.98)';
+                    });
+                    
+                    element.addEventListener('touchend', function() {
+                        this.style.opacity = '1';
+                        this.style.transform = 'scale(1)';
+                    });
+                    
+                    element.addEventListener('touchcancel', function() {
+                        this.style.opacity = '1';
+                        this.style.transform = 'scale(1)';
+                    });
+                }
+            });
+        });
+
+        // 客服电话
+        function callService() {
+            // 小程序中应使用 wx.makePhoneCall
+            if (typeof wx !== 'undefined') {
+                wx.makePhoneCall({
+                    phoneNumber: '400-888-6666'
+                });
+            } else {
+                window.location.href = 'tel:400-888-6666';
+            }
+        }
+
+        // 添加企业微信
+        function addWechat() {
+            // 小程序中应使用 wx.showModal 等API
+            if (typeof wx !== 'undefined') {
+                wx.showModal({
+                    title: '联系客服',
+                    content: '请添加企业微信：DroneService',
+                    showCancel: false,
+                    confirmText: '我知道了'
+                });
+            } else {
+                alert('请添加企业微信：DroneService');
+            }
+        }
+    </script>
+</body>
+</html>

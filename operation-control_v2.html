@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>操作控制 - 无人机自助打卡</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#07C160',
+                        secondary: '#6366F1',
+                        accent: '#FF6B35',
+                        dark: '#1E293B',
+                        light: '#F8FAFC',
+                        'gray-medium': '#64748B',
+                        'gray-light': '#E2E8F0',
+                        'wx-green': '#07C160',
+                        'wx-blue': '#576B95',
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .touch-friendly {
+                touch-action: manipulation;
+                -webkit-tap-highlight-color: transparent;
+            }
+            .safe-area-bottom {
+                padding-bottom: constant(safe-area-inset-bottom);
+                padding-bottom: env(safe-area-inset-bottom);
+            }
+            .miniprogram-scroll {
+                -webkit-overflow-scrolling: touch;
+            }
+            .miniprogram-card {
+                box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+                border-radius: 8px;
+            }
+            .wx-button {
+                border-radius: 4px;
+                font-size: 16px;
+                line-height: 1.4;
+            }
+            .pulse-ring {
+                animation: pulseRing 2s infinite;
+            }
+            .drone-animation {
+                animation: droneHover 3s ease-in-out infinite;
+            }
+            .countdown-animation {
+                animation: countdownPulse 1s ease-in-out infinite;
+            }
+        }
+        
+        @keyframes pulseRing {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(7, 193, 96, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 15px rgba(7, 193, 96, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(7, 193, 96, 0); }
+        }
+
+        @keyframes droneHover {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes countdownPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+    </style>
+</head>
+<body class="font-inter bg-light text-dark antialiased touch-action-manipulation">
+    <div class="min-h-screen w-full pb-20 safe-area-bottom">
+        <!-- 顶部导航栏 -->
+        <header class="sticky top-0 left-0 right-0 bg-white z-30 border-b border-gray-light">
+            <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+                <button onclick="location.href='user-management_v2.html'" class="text-dark touch-friendly p-2 -ml-2">
+                    <i class="fa fa-arrow-left text-lg"></i>
+                </button>
+                <h1 class="text-lg font-medium">操作控制</h1>
+                <a href="tel:400-888-6666" class="text-primary touch-friendly p-2 -mr-2">
+                    <i class="fa fa-phone text-lg"></i>
+                </a>
+            </div>
+        </header>
+
+        <!-- 当前状态显示 -->
+        <div class="px-4 py-4">
+            <div id="status-section" class="bg-gradient-to-r from-primary to-primary/80 rounded-xl p-5 text-white text-center mb-4 miniprogram-card">
+                <div id="status-icon" class="text-3xl mb-2">📍</div>
+                <div id="status-title" class="text-lg font-bold mb-1">请前往拍摄地点</div>
+                <div id="status-desc" class="text-white/90 text-sm">请按照导航指引前往指定的拍摄地点</div>
+            </div>
+        </div>
+
+        <!-- 位置确认部分 -->
+        <div id="location-section" class="px-4 space-y-4 miniprogram-scroll">
+            <div class="miniprogram-card bg-white p-4">
+                <h3 class="font-medium text-base mb-3 flex items-center">
+                    <i class="fa fa-map-marker text-primary mr-2"></i>
+                    位置确认
+                </h3>
+                
+                <!-- 地图区域 -->
+                <div class="relative rounded-lg overflow-hidden h-40 bg-gray-100 mb-3">
+                    <img src="https://picsum.photos/id/1019/800/600" alt="拍摄地点地图" class="w-full h-full object-cover">
+                    <!-- 地图标记 -->
+                    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                        <div class="w-5 h-5 bg-primary rounded-full flex items-center justify-center border-3 border-white shadow-lg">
+                            <div class="w-2 h-2 bg-white rounded-full"></div>
+                        </div>
+                        <div class="w-16 h-16 bg-primary/20 rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 pulse-ring"></div>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-50 rounded-lg p-3 mb-3">
+                    <div class="flex justify-between items-center mb-1">
+                        <span class="text-gray-medium text-sm">当前位置</span>
+                        <span id="location-status" class="text-orange-500 text-sm font-medium">未确认</span>
+                    </div>
+                    <div id="target-location" class="font-medium text-primary mb-1 text-sm">山顶观景台拍摄点</div>
+                    <div id="distance-info" class="text-gray-medium text-xs">距离目标地点约 <span id="distance">50</span> 米</div>
+                </div>
+                
+                <button id="confirm-location-btn" onclick="confirmLocation()" class="w-full bg-primary text-white py-3 rounded-lg font-medium touch-friendly wx-button">
+                    确认到达拍摄地点
+                </button>
+            </div>
+
+            <!-- GPS定位提示 -->
+            <div class="miniprogram-card bg-amber-50 border border-amber-200 p-3">
+                <div class="flex items-start space-x-2">
+                    <i class="fa fa-info-circle text-amber-600 mt-0.5"></i>
+                    <div class="text-amber-700 text-sm">
+                        <div class="font-medium mb-1">智能AI路线引导</div>
+                        <div class="text-xs">系统正在为您规划最佳路线，请按照地图指引前往拍摄地点</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 无人机控制部分 -->
+        <div id="control-section" class="px-4 space-y-4 miniprogram-scroll hidden">
+            <div class="miniprogram-card bg-white p-4">
+                <h3 class="font-medium text-base mb-3 flex items-center">
+                    <i class="fa fa-paper-plane text-primary mr-2"></i>
+                    无人机交互控制
+                </h3>
+                
+                <button id="summon-btn" onclick="summonDrone()" class="w-full bg-gradient-to-r from-primary to-primary/80 text-white py-4 rounded-lg font-medium touch-friendly mb-3 text-base wx-button">
+                    🚁 召唤无人机
+                </button>
+                
+                <div id="countdown-display" class="text-center text-5xl font-bold text-primary mb-4 hidden countdown-animation">30</div>
+                
+                <div id="camera-preview" class="w-full h-36 bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg mb-3 hidden flex flex-col items-center justify-center border-2 border-dashed border-primary">
+                    <div class="text-3xl mb-1 drone-animation">📷</div>
+                    <div class="text-sm text-gray-medium">无人机摄像头预览</div>
+                </div>
+                
+                <button id="confirm-identity-btn" onclick="confirmIdentity()" class="w-full bg-accent text-white py-3 rounded-lg font-medium touch-friendly mb-3 hidden wx-button">
+                    ✋ 举手确认身份
+                </button>
+                
+                <button id="start-shooting-btn" onclick="startShooting()" class="w-full bg-green-500 text-white py-3 rounded-lg font-medium touch-friendly hidden pulse-ring wx-button">
+                    🎬 开始拍摄
+                </button>
+            </div>
+
+            <!-- 无人机状态 -->
+            <div class="miniprogram-card bg-white p-4">
+                <h3 class="font-medium text-base mb-3 flex items-center">
+                    <i class="fa fa-info-circle text-primary mr-2"></i>
+                    无人机状态
+                </h3>
+                <div class="grid grid-cols-2 gap-3 text-sm">
+                    <div class="flex justify-between">
+                        <span class="text-gray-medium">当前状态:</span>
+                        <span class="font-medium text-green-500">待命</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-medium">电池电量:</span>
+                        <span class="font-medium text-green-500">95%</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-medium">飞行高度:</span>
+                        <span class="font-medium">0米</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-medium">信号强度:</span>
+                        <span class="font-medium text-green-500">强</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 拍摄进度 -->
+        <div id="shooting-progress" class="px-4 space-y-4 miniprogram-scroll hidden">
+            <div class="miniprogram-card bg-white p-4">
+                <div class="text-center mb-4">
+                    <div class="text-xl font-bold mb-2">正在拍摄中...</div>
+                    <div class="w-full bg-gray-200 rounded-full h-2 mb-2">
+                        <div id="progress-fill" class="bg-gradient-to-r from-primary to-accent h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                    <div id="progress-text" class="text-sm text-gray-medium">拍摄进度: 0%</div>
+                </div>
+                
+                <!-- 实时照片显示 -->
+                <div class="bg-gray-50 rounded-lg p-3 text-center">
+                    <div class="text-sm font-medium mb-2">实时照片预览</div>
+                    <div class="w-20 h-16 bg-gradient-to-br from-blue-100 to-blue-200 rounded mx-auto flex items-center justify-center">
+                        <i class="fa fa-image text-blue-500 text-lg"></i>
+                    </div>
+                    <div class="text-xs text-gray-medium mt-1">已拍摄 <span id="photo-count">3</span> 张</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 语音提示 -->
+        <div id="voice-tips" class="fixed bottom-20 left-4 right-4 bg-amber-100 border border-amber-300 rounded-lg p-3 hidden safe-area-bottom z-40">
+            <div class="flex items-center">
+                <div class="text-amber-600 text-lg mr-2">🔊</div>
+                <div id="voice-tip-text" class="text-amber-700 font-medium text-sm">请保持微笑，看向镜头</div>
+            </div>
+        </div>
+
+        <!-- 完成页面 -->
+        <div id="completion-section" class="px-4 py-4 hidden">
+            <div class="miniprogram-card bg-white p-5 text-center">
+                <div class="text-5xl mb-3">🎉</div>
+                <div class="text-xl font-bold mb-2">拍摄完成！</div>
+                <div class="text-gray-medium mb-4 leading-relaxed text-sm">
+                    您的拍摄已成功完成！<br>
+                    我们的AI系统将在24小时内完成剪辑，<br>
+                    请留意微信通知接收成片。
+                </div>
+                <button onclick="location.href='after-service_v2.html'" class="bg-primary text-white px-6 py-3 rounded-lg font-medium touch-friendly wx-button">
+                    定制成片效果 →
+                </button>
+            </div>
+        </div>
+
+        <!-- 拍摄指南 -->
+        <div class="px-4 py-4">
+            <div class="miniprogram-card bg-white p-4">
+                <h3 class="font-medium text-base mb-3 flex items-center">
+                    <i class="fa fa-lightbulb-o text-accent mr-2"></i>
+                    拍摄指南
+                </h3>
+                <ul class="space-y-2 text-sm">
+                    <li class="flex items-start">
+                        <i class="fa fa-check-circle text-green-500 mt-0.5 mr-2 text-xs"></i>
+                        <span>请确保您已站在指定拍摄区域内</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fa fa-check-circle text-green-500 mt-0.5 mr-2 text-xs"></i>
+                        <span>无人机到达后，请保持微笑并做出自然姿势</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fa fa-check-circle text-green-500 mt-0.5 mr-2 text-xs"></i>
+                        <span>拍摄过程中请听从语音提示，不要随意移动</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fa fa-check-circle text-green-500 mt-0.5 mr-2 text-xs"></i>
+                        <span>如遇紧急情况，请联系客服：400-888-6666</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- 微信小程序底部导航栏 -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-light z-50 safe-area-bottom">
+        <div class="flex justify-around items-center h-16">
+            <div class="tab-item flex flex-col items-center justify-center text-gray-medium touch-friendly" onclick="location.href='index_v2.html'">
+                <i class="fa fa-home text-lg mb-1"></i>
+                <span class="text-xs">首页</span>
+            </div>
+            <div class="tab-item flex flex-col items-center justify-center text-gray-medium touch-friendly" onclick="location.href='sample-display_v2.html'">
+                <i class="fa fa-picture-o text-lg mb-1"></i>
+                <span class="text-xs">样片</span>
+            </div>
+            <div class="tab-item flex flex-col items-center justify-center text-gray-medium touch-friendly" onclick="location.href='user-selection_v2.html'">
+                <i class="fa fa-camera text-lg mb-1"></i>
+                <span class="text-xs">拍摄</span>
+            </div>
+            <div class="tab-item flex flex-col items-center justify-center text-gray-medium touch-friendly no-scale" onclick="location.href='user-management_v2.html'">
+                <i class="fa fa-user text-lg mb-1"></i>
+                <span class="text-xs">订单</span>
+            </div>
+            <div class="tab-item flex flex-col items-center justify-center touch-friendly active">
+                <div class="w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center -mt-6 shadow-lg relative">
+                    <i class="fa fa-cog text-lg"></i>
+                </div>
+                <span class="text-xs text-primary font-medium mt-1">控制</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- JavaScript交互代码 -->
+    <script>
+        let currentStep = 'location'; // location, control, shooting, completed
+        let countdownTimer = null;
+        let progressTimer = null;
+        let currentProgress = 0;
+
+        // 小程序样式初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 添加小程序风格的触摸反馈
+            const touchElements = document.querySelectorAll('.touch-friendly');
+            touchElements.forEach(element => {
+                // 跳过有 no-scale 类的元素
+                if (element.classList.contains('no-scale')) {
+                    element.addEventListener('touchstart', function() {
+                        this.style.opacity = '0.7';
+                    });
+                    
+                    element.addEventListener('touchend', function() {
+                        this.style.opacity = '1';
+                    });
+                    
+                    element.addEventListener('touchcancel', function() {
+                        this.style.opacity = '1';
+                    });
+                } else {
+                    element.addEventListener('touchstart', function() {
+                        this.style.opacity = '0.7';
+                        this.style.transform = 'scale(0.95)';
+                    });
+                    
+                    element.addEventListener('touchend', function() {
+                        this.style.opacity = '1';
+                        this.style.transform = 'scale(1)';
+                    });
+                    
+                    element.addEventListener('touchcancel', function() {
+                        this.style.opacity = '1';
+                        this.style.transform = 'scale(1)';
+                    });
+                }
+            });
+
+            loadOrderInfo();
+            simulateLocationTracking();
+        });
+
+        // 加载订单信息
+        function loadOrderInfo() {
+            const order = JSON.parse(localStorage.getItem('currentOrder') || '{}');
+            if (order.location) {
+                document.getElementById('target-location').textContent = order.location;
+            }
+        }
+
+        // 模拟位置跟踪
+        function simulateLocationTracking() {
+            let distance = 50;
+            const interval = setInterval(() => {
+                distance -= Math.random() * 8 + 2;
+                if (distance <= 5) {
+                    distance = 0;
+                    document.getElementById('distance').textContent = '0';
+                    document.getElementById('location-status').textContent = '已到达';
+                    document.getElementById('location-status').className = 'text-green-500 text-sm font-medium';
+                    document.getElementById('confirm-location-btn').disabled = false;
+                    document.getElementById('confirm-location-btn').textContent = '已到达 - 点击确认';
+                    document.getElementById('confirm-location-btn').classList.remove('bg-primary');
+                    document.getElementById('confirm-location-btn').classList.add('bg-green-500');
+                    clearInterval(interval);
+                } else {
+                    document.getElementById('distance').textContent = Math.round(distance);
+                }
+            }, 2000);
+        }
+
+        // 确认位置
+        function confirmLocation() {
+            document.getElementById('location-status').textContent = '已确认';
+            document.getElementById('location-status').className = 'text-green-500 text-sm font-medium';
+            
+            // 更新状态
+            updateStatus('🎯', '位置确认成功', '请召唤无人机开始拍摄');
+            
+            // 显示控制面板
+            document.getElementById('location-section').classList.add('hidden');
+            document.getElementById('control-section').classList.remove('hidden');
+            
+            currentStep = 'control';
+
+            // 小程序分析上报
+            if (typeof wx !== 'undefined') {
+                wx.reportAnalytics('location_confirmed', {
+                    timestamp: Date.now()
+                });
+            }
+        }
+
+        // 召唤无人机
+        function summonDrone() {
+            updateStatus('🚁', '无人机正在飞来', '请稍等，无人机将在30秒内到达');
+            
+            document.getElementById('summon-btn').disabled = true;
+            document.getElementById('summon-btn').innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i> 无人机飞行中...';
+            document.getElementById('summon-btn').classList.add('opacity-60');
+            
+            // 小程序振动反馈
+            if (typeof wx !== 'undefined') {
+                wx.vibrateShort({
+                    type: 'medium'
+                });
+            }
+            
+            // 开始倒计时
+            startCountdown(30, () => {
+                droneArrived();
+            });
+        }
+
+        // 开始倒计时
+        function startCountdown(seconds, callback) {
+            const countdownEl = document.getElementById('countdown-display');
+            countdownEl.classList.remove('hidden');
+            
+            let remaining = seconds;
+            countdownEl.textContent = remaining;
+            
+            countdownTimer = setInterval(() => {
+                remaining--;
+                countdownEl.textContent = remaining;
+                
+                if (remaining <= 0) {
+                    clearInterval(countdownTimer);
+                    countdownEl.classList.add('hidden');
+                    callback();
+                }
+            }, 1000);
+        }
+
+        // 无人机到达
+        function droneArrived() {
+            updateStatus('🎵', '无人机已到达', '无人机正在盘旋并播放BGM，请举手确认身份');
+            
+            // 显示摄像头预览
+            document.getElementById('camera-preview').classList.remove('hidden');
+            document.getElementById('confirm-identity-btn').classList.remove('hidden');
+            
+            // 播放BGM提示
+            showVoiceTip('🎵 请面向无人机，举手示意');
+
+            // 小程序振动和音效
+            if (typeof wx !== 'undefined') {
+                wx.vibrateShort({
+                    type: 'heavy'
+                });
+            }
+        }
+
+        // 确认身份
+        function confirmIdentity() {
+            updateStatus('📸', '身份识别中', '正在进行人脸识别确认');
+            
+            document.getElementById('confirm-identity-btn').disabled = true;
+            document.getElementById('confirm-identity-btn').classList.add('opacity-60');
+            
+            // 模拟识别过程
+            setTimeout(() => {
+                updateStatus('✅', '身份确认成功', '请准备开始拍摄');
+                document.getElementById('start-shooting-btn').classList.remove('hidden');
+                showVoiceTip('✅ 身份确认成功，点击开始拍摄');
+            }, 3000);
+        }
+
+        // 开始拍摄
+        function startShooting() {
+            updateStatus('🎬', '拍摄进行中', '请配合无人机指示，保持最佳状态');
+            
+            document.getElementById('control-section').classList.add('hidden');
+            document.getElementById('shooting-progress').classList.remove('hidden');
+            
+            currentStep = 'shooting';
+            
+            // 开始拍摄进度
+            startShootingProgress();
+
+            // 小程序分析上报
+            if (typeof wx !== 'undefined') {
+                wx.reportAnalytics('shooting_started', {
+                    timestamp: Date.now()
+                });
+            }
+        }
+
+        // 拍摄进度控制
+        function startShootingProgress() {
+            const voiceTips = [
+                '请保持微笑，看向镜头',
+                '请稍微向左转身',
+                '很好，保持这个姿势',
+                '请举起右手挥挥手',
+                '完美！请保持自然状态',
+                '拍摄即将完成...'
+            ];
+            
+            let tipIndex = 0;
+            let photoCount = 3;
+            currentProgress = 0;
+            
+            progressTimer = setInterval(() => {
+                currentProgress += Math.random() * 12 + 3;
+                
+                if (currentProgress >= 100) {
+                    currentProgress = 100;
+                    clearInterval(progressTimer);
+                    completeShooting();
+                }
+                
+                // 更新进度条
+                document.getElementById('progress-fill').style.width = currentProgress + '%';
+                document.getElementById('progress-text').textContent = `拍摄进度: ${Math.round(currentProgress)}%`;
+                
+                // 更新照片数量
+                if (Math.round(currentProgress) % 20 === 0 && photoCount < 15) {
+                    photoCount++;
+                    document.getElementById('photo-count').textContent = photoCount;
+                }
+                
+                // 显示语音提示
+                if (tipIndex < voiceTips.length && currentProgress > (tipIndex + 1) * 16.67) {
+                    showVoiceTip('🔊 ' + voiceTips[tipIndex]);
+                    tipIndex++;
+                }
+            }, 2000);
+        }
+
+        // 完成拍摄
+        function completeShooting() {
+            updateStatus('🎉', '拍摄完成', '无人机正在返航，成片将在24小时内制作完成');
+            
+            document.getElementById('shooting-progress').classList.add('hidden');
+            document.getElementById('completion-section').classList.remove('hidden');
+            
+            showVoiceTip('🎉 拍摄完成！无人机正在返航');
+            
+            // 小程序庆祝反馈
+            if (typeof wx !== 'undefined') {
+                wx.vibrateShort({
+                    type: 'heavy'
+                });
+                wx.showToast({
+                    title: '拍摄完成！',
+                    icon: 'success',
+                    duration: 2000
+                });
+            }
+            
+            // 模拟无人机返航
+            setTimeout(() => {
+                hideVoiceTip();
+            }, 5000);
+            
+            currentStep = 'completed';
+        }
+
+        // 显示语音提示
+        function showVoiceTip(text) {
+            document.getElementById('voice-tip-text').textContent = text;
+            document.getElementById('voice-tips').classList.remove('hidden');
+            
+            // 自动隐藏提示
+            setTimeout(() => {
+                hideVoiceTip();
+            }, 4000);
+        }
+
+        // 隐藏语音提示
+        function hideVoiceTip() {
+            document.getElementById('voice-tips').classList.add('hidden');
+        }
+
+        // 更新状态显示
+        function updateStatus(icon, title, desc) {
+            document.getElementById('status-icon').textContent = icon;
+            document.getElementById('status-title').textContent = title;
+            document.getElementById('status-desc').textContent = desc;
+        }
+
+        // 页面离开时清理定时器
+        window.addEventListener('beforeunload', function() {
+            if (countdownTimer) clearInterval(countdownTimer);
+            if (progressTimer) clearInterval(progressTimer);
+        });
+    </script>
+</body>
+</html>
