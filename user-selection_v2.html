@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>用户自选页面 - 无人机自助打卡</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#07C160',
+                        secondary: '#6366F1',
+                        accent: '#FF6B35',
+                        dark: '#1E293B',
+                        light: '#F8FAFC',
+                        'gray-medium': '#64748B',
+                        'gray-light': '#E2E8F0',
+                        'wx-green': '#07C160',
+                        'wx-blue': '#576B95',
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .touch-friendly {
+                touch-action: manipulation;
+                -webkit-tap-highlight-color: transparent;
+            }
+            .safe-area-bottom {
+                padding-bottom: constant(safe-area-inset-bottom);
+                padding-bottom: env(safe-area-inset-bottom);
+            }
+            .miniprogram-scroll {
+                -webkit-overflow-scrolling: touch;
+            }
+            .miniprogram-card {
+                box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+                border-radius: 8px;
+            }
+            .scrollbar-hide {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+            .scrollbar-hide::-webkit-scrollbar {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body class="font-inter bg-light text-dark antialiased touch-action-manipulation">
+    <div class="min-h-screen w-full pb-20 safe-area-bottom">
+        <!-- 顶部导航栏 -->
+        <header class="sticky top-0 left-0 right-0 bg-white z-30 border-b border-gray-light">
+            <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+                <button onclick="location.href='index_v2.html'" class="text-dark touch-friendly p-2 -ml-2">
+                    <i class="fa fa-arrow-left text-lg"></i>
+                </button>
+                <h1 class="text-lg font-medium">用户自选页面</h1>
+                <div class="w-8"></div>
+            </div>
+        </header>
+        
+        <!-- 用户自选内容 -->
+        <div class="px-4 py-4 space-y-6 miniprogram-scroll">
+            <!-- 拍摄点位选择（各个点位） -->
+            <div class="space-y-3">
+                <h2 class="text-base font-bold">选择拍摄点位</h2>
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="location-item miniprogram-card p-3 touch-friendly" onclick="selectLocation(this, '山顶观景台')">
+                        <div class="relative mb-2">
+                            <img src="https://picsum.photos/id/1018/300/200" alt="山顶观景台" class="w-full h-20 object-cover rounded-lg">
+                            <div class="absolute top-1 right-1 bg-primary/90 text-white text-xs px-1.5 py-0.5 rounded">
+                                4.9★
+                            </div>
+                        </div>
+                        <h3 class="font-medium text-sm mb-1">点位A - 山顶观景台</h3>
+                        <p class="text-gray-medium text-xs leading-relaxed">俯瞰城市全景，视野开阔，适合全景拍摄</p>
+                    </div>
+                    <div class="location-item miniprogram-card p-3 touch-friendly" onclick="selectLocation(this, '城市阳台')">
+                        <div class="relative mb-2">
+                            <img src="https://picsum.photos/id/1031/300/200" alt="城市阳台" class="w-full h-20 object-cover rounded-lg">
+                            <div class="absolute top-1 right-1 bg-primary/90 text-white text-xs px-1.5 py-0.5 rounded">
+                                4.8★
+                            </div>
+                        </div>
+                        <h3 class="font-medium text-sm mb-1">点位B - 城市阳台</h3>
+                        <p class="text-gray-medium text-xs leading-relaxed">城市天际线最佳拍摄点，现代感强</p>
+                    </div>
+                    <div class="location-item miniprogram-card p-3 touch-friendly" onclick="selectLocation(this, '湖畔公园')">
+                        <div class="relative mb-2">
+                            <img src="https://picsum.photos/id/1039/300/200" alt="湖畔公园" class="w-full h-20 object-cover rounded-lg">
+                            <div class="absolute top-1 right-1 bg-primary/90 text-white text-xs px-1.5 py-0.5 rounded">
+                                4.7★
+                            </div>
+                        </div>
+                        <h3 class="font-medium text-sm mb-1">点位C - 湖畔公园</h3>
+                        <p class="text-gray-medium text-xs leading-relaxed">湖光山色，自然美景，适合人像拍摄</p>
+                    </div>
+                    <div class="location-item miniprogram-card p-3 touch-friendly" onclick="selectLocation(this, '文化中心')">
+                        <div class="relative mb-2">
+                            <img src="https://picsum.photos/id/1073/300/200" alt="文化中心" class="w-full h-20 object-cover rounded-lg">
+                            <div class="absolute top-1 right-1 bg-primary/90 text-white text-xs px-1.5 py-0.5 rounded">
+                                4.6★
+                            </div>
+                        </div>
+                        <h3 class="font-medium text-sm mb-1">点位D - 文化中心</h3>
+                        <p class="text-gray-medium text-xs leading-relaxed">现代建筑与传统文化结合</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 拍摄角度选择（不同角度） -->
+            <div class="space-y-3">
+                <h2 class="text-base font-bold">选择拍摄角度</h2>
+                <div class="grid grid-cols-3 gap-2">
+                    <div class="angle-item miniprogram-card p-3 text-center touch-friendly" onclick="toggleAngle(this, '高空俯拍')">
+                        <div class="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-2">
+                            <i class="fa fa-plane text-primary text-sm"></i>
+                        </div>
+                        <p class="text-xs font-medium">高空俯拍</p>
+                        <p class="text-xs text-gray-medium">50米高度</p>
+                    </div>
+                    <div class="angle-item miniprogram-card p-3 text-center touch-friendly" onclick="toggleAngle(this, '环绕拍摄')">
+                        <div class="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-2">
+                            <i class="fa fa-repeat text-primary text-sm"></i>
+                        </div>
+                        <p class="text-xs font-medium">环绕拍摄</p>
+                        <p class="text-xs text-gray-medium">360度环绕</p>
+                    </div>
+                    <div class="angle-item miniprogram-card p-3 text-center touch-friendly" onclick="toggleAngle(this, '斜拍特写')">
+                        <div class="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-2">
+                            <i class="fa fa-camera text-primary text-sm"></i>
+                        </div>
+                        <p class="text-xs font-medium">斜拍特写</p>
+                        <p class="text-xs text-gray-medium">45度斜拍</p>
+                    </div>
+                    <div class="angle-item miniprogram-card p-3 text-center touch-friendly" onclick="toggleAngle(this, '低空跟随')">
+                        <div class="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-2">
+                            <i class="fa fa-road text-primary text-sm"></i>
+                        </div>
+                        <p class="text-xs font-medium">低空跟随</p>
+                        <p class="text-xs text-gray-medium">5米跟拍</p>
+                    </div>
+                    <div class="angle-item miniprogram-card p-3 text-center touch-friendly" onclick="toggleAngle(this, '定点拍摄')">
+                        <div class="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-2">
+                            <i class="fa fa-crosshairs text-primary text-sm"></i>
+                        </div>
+                        <p class="text-xs font-medium">定点拍摄</p>
+                        <p class="text-xs text-gray-medium">固定角度</p>
+                    </div>
+                    <div class="angle-item miniprogram-card p-3 text-center touch-friendly" onclick="toggleAngle(this, '升降拍摄')">
+                        <div class="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-2">
+                            <i class="fa fa-arrows-v text-primary text-sm"></i>
+                        </div>
+                        <p class="text-xs font-medium">升降拍摄</p>
+                        <p class="text-xs text-gray-medium">垂直运动</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 镜头效果选择（不同镜头效果） -->
+            <div class="space-y-3">
+                <h2 class="text-base font-bold">选择镜头效果</h2>
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="effect-item miniprogram-card p-3 touch-friendly" onclick="toggleEffect(this, '标准拍摄')">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
+                                    <i class="fa fa-video-camera text-primary text-sm"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-sm">标准拍摄</h4>
+                                    <p class="text-gray-medium text-xs">清晰稳定</p>
+                                </div>
+                            </div>
+                            <div class="effect-checkbox w-5 h-5 border-2 border-gray-light rounded flex items-center justify-center">
+                                <i class="fa fa-check text-primary text-xs hidden"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="effect-item miniprogram-card p-3 touch-friendly" onclick="toggleEffect(this, '慢动作拍摄')">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 bg-accent/10 rounded-full flex items-center justify-center">
+                                    <i class="fa fa-clock-o text-accent text-sm"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-sm">慢动作拍摄</h4>
+                                    <p class="text-gray-medium text-xs">120fps慢镜</p>
+                                </div>
+                            </div>
+                            <div class="effect-checkbox w-5 h-5 border-2 border-gray-light rounded flex items-center justify-center">
+                                <i class="fa fa-check text-primary text-xs hidden"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="effect-item miniprogram-card p-3 touch-friendly" onclick="toggleEffect(this, '延时摄影')">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 bg-secondary/10 rounded-full flex items-center justify-center">
+                                    <i class="fa fa-fast-forward text-secondary text-sm"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-sm">延时摄影</h4>
+                                    <p class="text-gray-medium text-xs">时光流转</p>
+                                </div>
+                            </div>
+                            <div class="effect-checkbox w-5 h-5 border-2 border-gray-light rounded flex items-center justify-center">
+                                <i class="fa fa-check text-primary text-xs hidden"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="effect-item miniprogram-card p-3 touch-friendly" onclick="toggleEffect(this, '运动跟踪')">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                                    <i class="fa fa-target text-green-600 text-sm"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-sm">运动跟踪</h4>
+                                    <p class="text-gray-medium text-xs">智能跟随</p>
+                                </div>
+                            </div>
+                            <div class="effect-checkbox w-5 h-5 border-2 border-gray-light rounded flex items-center justify-center">
+                                <i class="fa fa-check text-primary text-xs hidden"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 拍摄时长选择（不同时长） -->
+            <div class="space-y-3">
+                <h2 class="text-base font-bold">选择拍摄时长</h2>
+                <div class="grid grid-cols-4 gap-2">
+                    <div class="duration-item miniprogram-card p-3 text-center touch-friendly" onclick="selectDuration(this, 15)">
+                        <div class="text-primary font-bold text-lg">15秒</div>
+                        <div class="text-xs text-gray-medium">基础</div>
+                    </div>
+                    <div class="duration-item miniprogram-card p-3 text-center touch-friendly border-2 border-primary bg-primary/5" onclick="selectDuration(this, 30)">
+                        <div class="text-primary font-bold text-lg">30秒</div>
+                        <div class="text-xs text-primary">推荐</div>
+                    </div>
+                    <div class="duration-item miniprogram-card p-3 text-center touch-friendly" onclick="selectDuration(this, 60)">
+                        <div class="text-primary font-bold text-lg">60秒</div>
+                        <div class="text-xs text-gray-medium">进阶</div>
+                    </div>
+                    <div class="duration-item miniprogram-card p-3 text-center touch-friendly" onclick="selectDuration(this, 120)">
+                        <div class="text-primary font-bold text-lg">120秒</div>
+                        <div class="text-xs text-gray-medium">专业</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 自由跟拍选项（必须包含） -->
+            <div class="space-y-3">
+                <h2 class="text-base font-bold">🔥 特色拍摄模式</h2>
+                <div class="miniprogram-card bg-gradient-to-r from-secondary/10 to-secondary/5 border-2 border-secondary/20 p-4">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-secondary/20 rounded-full flex items-center justify-center">
+                                <i class="fa fa-magic text-secondary text-lg"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-base text-secondary">自由跟拍模式</h4>
+                                <p class="text-gray-medium text-xs">智能跟随拍摄，无固定路线，更加灵活自然</p>
+                                <div class="flex items-center space-x-4 mt-1">
+                                    <span class="text-xs text-secondary">✓ 30分钟跟拍</span>
+                                    <span class="text-xs text-secondary">✓ 50张照片</span>
+                                    <span class="text-xs text-secondary">✓ 3段视频</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <div class="free-follow-checkbox w-6 h-6 border-2 border-secondary rounded flex items-center justify-center bg-secondary text-white touch-friendly" onclick="toggleFreeFollow(this)">
+                                <i class="fa fa-check text-xs"></i>
+                            </div>
+                            <span class="text-secondary font-bold text-sm mt-1">¥299</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 选择汇总 -->
+            <div class="miniprogram-card bg-white p-4">
+                <h3 class="font-bold text-base mb-3">选择汇总</h3>
+                <div id="selection-summary" class="space-y-2 text-sm">
+                    <div class="flex justify-between">
+                        <span class="text-gray-medium">拍摄地点：</span>
+                        <span id="selected-location">未选择</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-medium">拍摄角度：</span>
+                        <span id="selected-angles">未选择</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-medium">镜头效果：</span>
+                        <span id="selected-effects">未选择</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-medium">拍摄时长：</span>
+                        <span id="selected-duration">30秒</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-medium">自由跟拍：</span>
+                        <span id="selected-follow" class="text-secondary font-medium">已选择</span>
+                    </div>
+                    <div class="flex justify-between pt-2 border-t border-gray-light">
+                        <span class="font-bold">预计总价：</span>
+                        <span class="font-bold text-primary text-lg" id="total-price">¥299</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 固定底部确认按钮 -->
+        <div class="fixed bottom-16 left-0 right-0 px-4 bg-white border-t border-gray-light safe-area-bottom">
+            <div class="py-3">
+                <button id="confirm-selection" onclick="confirmSelection()" class="w-full py-4 bg-primary text-white rounded-lg font-medium touch-friendly text-base">
+                    确认选择，前往付费
+                </button>
+                <p class="text-center text-xs text-gray-medium mt-2">
+                    确认后将进入用户注册和支付流程
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 微信小程序底部导航栏 -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-light z-50 safe-area-bottom">
+        <div class="flex justify-around items-center h-16">
+            <div class="tab-item flex flex-col items-center justify-center text-gray-medium touch-friendly" onclick="location.href='index_v2.html'">
+                <i class="fa fa-home text-lg mb-1"></i>
+                <span class="text-xs">首页</span>
+            </div>
+            <div class="tab-item flex flex-col items-center justify-center text-gray-medium touch-friendly" onclick="location.href='sample-display_v2.html'">
+                <i class="fa fa-picture-o text-lg mb-1"></i>
+                <span class="text-xs">样片</span>
+            </div>
+            <div class="tab-item flex flex-col items-center justify-center touch-friendly active">
+                <div class="w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center -mt-6 shadow-lg relative">
+                    <i class="fa fa-camera text-lg"></i>
+                </div>
+                <span class="text-xs text-primary font-medium mt-1">拍摄</span>
+            </div>
+            <div class="tab-item flex flex-col items-center justify-center text-gray-medium touch-friendly no-scale" onclick="location.href='user-management_v2.html'">
+                <i class="fa fa-user text-lg mb-1"></i>
+                <span class="text-xs">订单</span>
+            </div>
+            <div class="tab-item flex flex-col items-center justify-center text-gray-medium touch-friendly" onclick="location.href='after-service_v2.html'">
+                <i class="fa fa-star text-lg mb-1"></i>
+                <span class="text-xs">定制</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- JavaScript交互代码 -->
+    <script>
+        // 用户选择数据
+        let userSelections = {
+            location: '',
+            angles: [],
+            effects: [],
+            duration: 30,
+            freeFollow: true,
+            totalPrice: 299
+        };
+
+        // 小程序样式初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 添加小程序风格的触摸反馈
+            const touchElements = document.querySelectorAll('.touch-friendly');
+            touchElements.forEach(element => {
+                // 跳过有 no-scale 类的元素
+                if (element.classList.contains('no-scale')) {
+                    element.addEventListener('touchstart', function() {
+                        this.style.opacity = '0.7';
+                    });
+                    
+                    element.addEventListener('touchend', function() {
+                        this.style.opacity = '1';
+                    });
+                    
+                    element.addEventListener('touchcancel', function() {
+                        this.style.opacity = '1';
+                    });
+                } else {
+                    element.addEventListener('touchstart', function() {
+                        this.style.opacity = '0.7';
+                        this.style.transform = 'scale(0.95)';
+                    });
+                    
+                    element.addEventListener('touchend', function() {
+                        this.style.opacity = '1';
+                        this.style.transform = 'scale(1)';
+                    });
+                    
+                    element.addEventListener('touchcancel', function() {
+                        this.style.opacity = '1';
+                        this.style.transform = 'scale(1)';
+                    });
+                }
+            });
+
+            // 初始化默认选择
+            updateSummary();
+        });
+
+        // 选择拍摄点位
+        function selectLocation(element, location) {
+            // 移除其他选中状态
+            document.querySelectorAll('.location-item').forEach(item => {
+                item.classList.remove('border-2', 'border-primary', 'bg-primary/5');
+            });
+            
+            // 添加选中状态
+            element.classList.add('border-2', 'border-primary', 'bg-primary/5');
+            
+            userSelections.location = location;
+            updateSummary();
+            
+            // 小程序分析上报
+            if (typeof wx !== 'undefined') {
+                wx.reportAnalytics('select_location', {
+                    location: location,
+                    timestamp: Date.now()
+                });
+            }
+        }
+
+        // 切换拍摄角度
+        function toggleAngle(element, angle) {
+            const isSelected = element.classList.contains('border-2');
+            
+            if (isSelected) {
+                // 取消选择
+                element.classList.remove('border-2', 'border-primary', 'bg-primary/5');
+                userSelections.angles = userSelections.angles.filter(a => a !== angle);
+            } else {
+                // 添加选择
+                element.classList.add('border-2', 'border-primary', 'bg-primary/5');
+                userSelections.angles.push(angle);
+            }
+            
+            updateSummary();
+        }
+
+        // 切换镜头效果
+        function toggleEffect(element, effect) {
+            const checkbox = element.querySelector('.effect-checkbox');
+            const checkIcon = checkbox.querySelector('i');
+            const isSelected = !checkIcon.classList.contains('hidden');
+            
+            if (isSelected) {
+                // 取消选择
+                checkIcon.classList.add('hidden');
+                checkbox.classList.remove('border-primary', 'bg-primary/10');
+                checkbox.classList.add('border-gray-light');
+                userSelections.effects = userSelections.effects.filter(e => e !== effect);
+            } else {
+                // 添加选择
+                checkIcon.classList.remove('hidden');
+                checkbox.classList.remove('border-gray-light');
+                checkbox.classList.add('border-primary', 'bg-primary/10');
+                userSelections.effects.push(effect);
+            }
+            
+            updateSummary();
+        }
+
+        // 选择拍摄时长
+        function selectDuration(element, duration) {
+            // 移除其他选中状态
+            document.querySelectorAll('.duration-item').forEach(item => {
+                item.classList.remove('border-2', 'border-primary', 'bg-primary/5');
+                const text = item.querySelector('.text-xs');
+                if (text && text.textContent !== '推荐') {
+                    text.textContent = text.classList.contains('text-gray-medium') ? '基础' : '进阶';
+                    text.className = 'text-xs text-gray-medium';
+                }
+            });
+            
+            // 添加选中状态
+            element.classList.add('border-2', 'border-primary', 'bg-primary/5');
+            const text = element.querySelector('.text-xs');
+            if (text) {
+                text.textContent = '已选';
+                text.className = 'text-xs text-primary';
+            }
+            
+            userSelections.duration = duration;
+            updateSummary();
+        }
+
+        // 切换自由跟拍
+        function toggleFreeFollow(element) {
+            const isSelected = userSelections.freeFollow;
+            
+            if (isSelected) {
+                // 取消选择
+                element.classList.remove('bg-secondary', 'text-white');
+                element.classList.add('border-gray-light');
+                element.querySelector('i').classList.add('hidden');
+                userSelections.freeFollow = false;
+            } else {
+                // 选择
+                element.classList.add('bg-secondary', 'text-white');
+                element.classList.remove('border-gray-light');
+                element.querySelector('i').classList.remove('hidden');
+                userSelections.freeFollow = true;
+            }
+            
+            updateSummary();
+        }
+
+        // 更新选择汇总
+        function updateSummary() {
+            document.getElementById('selected-location').textContent = userSelections.location || '未选择';
+            document.getElementById('selected-angles').textContent = userSelections.angles.length > 0 ? userSelections.angles.join('、') : '未选择';
+            document.getElementById('selected-effects').textContent = userSelections.effects.length > 0 ? userSelections.effects.join('、') : '未选择';
+            document.getElementById('selected-duration').textContent = userSelections.duration + '秒';
+            document.getElementById('selected-follow').textContent = userSelections.freeFollow ? '已选择' : '未选择';
+            
+            // 计算总价
+            let totalPrice = 0;
+            if (userSelections.freeFollow) {
+                totalPrice = 299;
+            } else {
+                totalPrice = 99; // 基础价格
+                totalPrice += userSelections.angles.length * 20; // 每个角度加20元
+                totalPrice += userSelections.effects.length * 15; // 每个效果加15元
+                if (userSelections.duration > 30) {
+                    totalPrice += (userSelections.duration - 30) * 2; // 超过30秒每秒加2元
+                }
+            }
+            
+            userSelections.totalPrice = totalPrice;
+            document.getElementById('total-price').textContent = '¥' + totalPrice;
+        }
+
+        // 确认选择
+        function confirmSelection() {
+            if (!userSelections.location) {
+                if (typeof wx !== 'undefined') {
+                    wx.showToast({
+                        title: '请选择拍摄地点',
+                        icon: 'none',
+                        duration: 2000
+                    });
+                } else {
+                    alert('请选择拍摄地点');
+                }
+                return;
+            }
+
+            if (userSelections.angles.length === 0 && !userSelections.freeFollow) {
+                if (typeof wx !== 'undefined') {
+                    wx.showToast({
+                        title: '请选择拍摄角度或自由跟拍',
+                        icon: 'none',
+                        duration: 2000
+                    });
+                } else {
+                    alert('请选择拍摄角度或自由跟拍');
+                }
+                return;
+            }
+            
+            // 保存用户选择到localStorage
+            const selectionData = {
+                ...userSelections,
+                timestamp: new Date().toISOString()
+            };
+            
+            localStorage.setItem('userSelection', JSON.stringify(selectionData));
+            
+            // 小程序分析上报
+            if (typeof wx !== 'undefined') {
+                wx.reportAnalytics('confirm_selection', {
+                    location: userSelections.location,
+                    totalPrice: userSelections.totalPrice,
+                    freeFollow: userSelections.freeFollow,
+                    timestamp: Date.now()
+                });
+            }
+            
+            // 跳转到用户管理页面
+            location.href = 'user-management_v2.html';
+        }
+
+        // 页面加载时恢复之前的选择
+        window.addEventListener('DOMContentLoaded', function() {
+            const savedSelection = localStorage.getItem('userSelection');
+            if (savedSelection) {
+                const data = JSON.parse(savedSelection);
+                console.log('恢复之前的选择:', data);
+                // 可以在这里恢复选择状态
+            }
+        });
+    </script>
+</body>
+</html>

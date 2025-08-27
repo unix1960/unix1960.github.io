@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>价格说明 - 无人机自助打卡</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#07C160',
+                        secondary: '#6366F1',
+                        accent: '#FF6B35',
+                        dark: '#1E293B',
+                        light: '#F8FAFC',
+                        'gray-medium': '#64748B',
+                        'gray-light': '#E2E8F0',
+                        'wx-green': '#07C160',
+                        'wx-blue': '#576B95',
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .touch-friendly {
+                touch-action: manipulation;
+                -webkit-tap-highlight-color: transparent;
+            }
+            .safe-area-bottom {
+                padding-bottom: constant(safe-area-inset-bottom);
+                padding-bottom: env(safe-area-inset-bottom);
+            }
+            .miniprogram-scroll {
+                -webkit-overflow-scrolling: touch;
+            }
+            .miniprogram-card {
+                box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+                border-radius: 8px;
+            }
+        }
+    </style>
+</head>
+<body class="font-inter bg-light text-dark antialiased touch-action-manipulation">
+    <div class="min-h-screen w-full pb-16 safe-area-bottom">
+        <!-- 顶部导航栏 -->
+        <header class="sticky top-0 left-0 right-0 bg-white z-30 border-b border-gray-light">
+            <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+                <button onclick="location.href='index_v2.html'" class="text-dark touch-friendly p-2 -ml-2">
+                    <i class="fa fa-arrow-left text-lg"></i>
+                </button>
+                <h1 class="text-lg font-medium">价格说明</h1>
+                <div class="w-8"></div>
+            </div>
+        </header>
+        
+        <!-- 价格套餐（可后台随时调整价格） -->
+        <div class="px-4 py-4 space-y-4 miniprogram-scroll">
+            <!-- 基础套餐 -->
+            <div class="miniprogram-card bg-white overflow-hidden">
+                <div class="bg-primary/10 px-4 py-3">
+                    <div class="flex justify-between items-center">
+                        <h3 class="font-bold text-base">基础打卡套餐</h3>
+                        <span class="text-primary font-bold text-xl">¥99</span>
+                    </div>
+                    <p class="text-gray-medium text-sm mt-1">适合初次体验的用户</p>
+                </div>
+                <div class="p-4">
+                    <ul class="space-y-2 mb-4">
+                        <li class="flex items-start space-x-2">
+                            <i class="fa fa-check text-green-500 mt-1 text-sm"></i>
+                            <span class="text-sm">1个指定点位拍摄</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fa fa-check text-green-500 mt-1 text-sm"></i>
+                            <span class="text-sm">15张高清照片</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fa fa-check text-green-500 mt-1 text-sm"></i>
+                            <span class="text-sm">1段15秒短视频</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fa fa-check text-green-500 mt-1 text-sm"></i>
+                            <span class="text-sm">基础AI剪辑</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fa fa-check text-green-500 mt-1 text-sm"></i>
+                            <span class="text-sm">24小时内交付</span>
+                        </li>
+                    </ul>
+                    <button onclick="location.href='user-selection_v2.html'" class="w-full py-3 bg-primary text-white rounded-lg font-medium touch-friendly text-sm">
+                        立即选择
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 进阶套餐 -->
+            <div class="miniprogram-card bg-white overflow-hidden">
+                <div class="bg-accent/10 px-4 py-3 relative">
+                    <div class="absolute top-0 right-0 bg-accent text-white text-xs px-2 py-1 rounded-bl-lg">
+                        热门推荐
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <h3 class="font-bold text-base">进阶打卡套餐</h3>
+                        <span class="text-accent font-bold text-xl">¥199</span>
+                    </div>
+                    <p class="text-gray-medium text-sm mt-1">适合追求更多样化内容的用户</p>
+                </div>
+                <div class="p-4">
+                    <ul class="space-y-2 mb-4">
+                        <li class="flex items-start space-x-2">
+                            <i class="fa fa-check text-green-500 mt-1 text-sm"></i>
+                            <span class="text-sm">2个指定点位拍摄</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fa fa-check text-green-500 mt-1 text-sm"></i>
+                            <span class="text-sm">30张高清照片</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fa fa-check text-green-500 mt-1 text-sm"></i>
+                            <span class="text-sm">2段30秒短视频</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fa fa-check text-green-500 mt-1 text-sm"></i>
+                            <span class="text-sm">高级AI剪辑</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fa fa-check text-green-500 mt-1 text-sm"></i>
+                            <span class="text-sm">12小时内交付</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fa fa-check text-green-500 mt-1 text-sm"></i>
+                            <span class="text-sm">1次免费修改</span>
+                        </li>
+                    </ul>
+                    <button onclick="location.href='user-selection_v2.html'" class="w-full py-3 bg-accent text-white rounded-lg font-medium touch-friendly text-sm">
+                        立即选择
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 自由跟拍套餐（必须包含的重要选项） -->
+            <div class="miniprogram-card bg-gradient-to-br from-secondary/10 to-secondary/5 overflow-hidden border-2 border-secondary/20">
+                <div class="bg-secondary/10 px-4 py-3 relative">
+                    <div class="absolute top-0 right-0 bg-secondary text-white text-xs px-2 py-1 rounded-bl-lg">
+                        🔥 自由跟拍
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <h3 class="font-bold text-base">自由跟拍套餐</h3>
+                        <span class="text-secondary font-bold text-xl">¥299</span>
+                    </div>
+                    <p class="text-gray-medium text-sm mt-1">适合需要个性化拍摄体验的用户</p>
+                </div>
+                <div class="p-4">
+                    <ul class="space-y-2 mb-4">
+                        <li class="flex items-start space-x-2">
+                            <i class="fa fa-check text-green-500 mt-1 text-sm"></i>
+                            <span class="text-sm text-secondary font-medium">30分钟自由跟拍</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fa fa-check text-green-500 mt-1 text-sm"></i>
+                            <span class="text-sm">50张高清照片</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fa fa-check text-green-500 mt-1 text-sm"></i>
+                            <span class="text-sm">3段1分钟短视频</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fa fa-check text-green-500 mt-1 text-sm"></i>
+                            <span class="text-sm">专业人工剪辑</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fa fa-check text-green-500 mt-1 text-sm"></i>
+                            <span class="text-sm">6小时内交付</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fa fa-check text-green-500 mt-1 text-sm"></i>
+                            <span class="text-sm">3次免费修改</span>
+                        </li>
+                    </ul>
+                    <button onclick="location.href='user-selection_v2.html'" class="w-full py-3 bg-secondary text-white rounded-lg font-medium touch-friendly text-sm">
+                        立即选择
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 使用说明（可后台随时编辑） -->
+        <div class="px-4 py-4">
+            <div class="miniprogram-card bg-white p-4">
+                <h3 class="text-base font-bold mb-3 flex items-center">
+                    <i class="fa fa-book text-primary mr-2"></i>
+                    使用说明
+                </h3>
+                <div class="space-y-3">
+                    <div class="flex items-start space-x-3">
+                        <div class="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <span class="text-primary text-xs font-bold">1</span>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-sm mb-1">选择拍摄套餐</h4>
+                            <p class="text-gray-medium text-xs">根据需求选择合适的拍摄套餐和效果</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <div class="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <span class="text-primary text-xs font-bold">2</span>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-sm mb-1">到达指定拍摄点</h4>
+                            <p class="text-gray-medium text-xs">前往选定的拍摄点位，确保在安全区域内</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <div class="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <span class="text-primary text-xs font-bold">3</span>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-sm mb-1">确认位置并召唤无人机</h4>
+                            <p class="text-gray-medium text-xs">在小程序内确认位置，点击召唤无人机按钮</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <div class="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <span class="text-primary text-xs font-bold">4</span>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-sm mb-1">配合拍摄</h4>
+                            <p class="text-gray-medium text-xs">按照语音提示做出相应动作，保持姿势稳定</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <div class="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <span class="text-primary text-xs font-bold">5</span>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-sm mb-1">获取成片</h4>
+                            <p class="text-gray-medium text-xs">拍摄完成后，等待AI剪辑，即可查看下载成片</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 注意事项（可后台随时编辑） -->
+        <div class="px-4 py-4">
+            <div class="miniprogram-card bg-amber-50 border border-amber-200 p-4">
+                <h3 class="text-base font-bold mb-3 flex items-center text-amber-700">
+                    <i class="fa fa-exclamation-triangle mr-2"></i>
+                    注意事项
+                </h3>
+                <ul class="space-y-2 text-amber-700 text-sm">
+                    <li class="flex items-start space-x-2">
+                        <i class="fa fa-exclamation-circle mt-1 text-xs flex-shrink-0"></i>
+                        <span>请确保在指定拍摄区域内使用本服务，禁止在禁飞区召唤无人机</span>
+                    </li>
+                    <li class="flex items-start space-x-2">
+                        <i class="fa fa-exclamation-circle mt-1 text-xs flex-shrink-0"></i>
+                        <span>恶劣天气（大风、暴雨、雷电等）情况下，系统将自动取消拍摄并退款</span>
+                    </li>
+                    <li class="flex items-start space-x-2">
+                        <i class="fa fa-exclamation-circle mt-1 text-xs flex-shrink-0"></i>
+                        <span>拍摄过程中请听从语音指引，不要做出危险动作或远离拍摄区域</span>
+                    </li>
+                    <li class="flex items-start space-x-2">
+                        <i class="fa fa-exclamation-circle mt-1 text-xs flex-shrink-0"></i>
+                        <span>如遇无人机故障导致拍摄失败，我们将全额退款并赠送下次拍摄优惠券</span>
+                    </li>
+                    <li class="flex items-start space-x-2">
+                        <i class="fa fa-exclamation-circle mt-1 text-xs flex-shrink-0"></i>
+                        <span>请爱护设备，故意损坏需承担赔偿责任</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 免责声明（可后台随时编辑） -->
+        <div class="px-4 py-4">
+            <div class="miniprogram-card bg-blue-50 border border-blue-200 p-4">
+                <h3 class="text-base font-bold mb-3 flex items-center text-blue-700">
+                    <i class="fa fa-info-circle mr-2"></i>
+                    免责声明
+                </h3>
+                <div class="text-blue-700 text-sm space-y-2">
+                    <p>1. 本服务仅在指定区域内提供，请严格按照指定地点进行拍摄。</p>
+                    <p>2. 因天气原因导致无法拍摄的，可免费改期或全额退款。</p>
+                    <p>3. 拍摄过程中如因个人原因导致的安全问题，本平台不承担责任。</p>
+                    <p>4. 最终成片效果以实际拍摄环境和设备状况为准。</p>
+                    <p>5. 拍摄内容仅供个人使用，不得用于商业用途。</p>
+                </div>
+                <button onclick="showFullDisclaimer()" class="mt-3 text-blue-600 text-sm touch-friendly underline">
+                    查看完整免责声明
+                </button>
+            </div>
+        </div>
+
+        <!-- 联系客服 -->
+        <div class="px-4 py-4 pb-20">
+            <div class="miniprogram-card bg-gradient-to-r from-wx-blue to-wx-blue/80 p-4 text-white text-center">
+                <h3 class="text-base font-bold mb-2">需要帮助？</h3>
+                <p class="text-white/90 text-sm mb-4">我们的专业客服团队随时为您解答</p>
+                <div class="flex space-x-3">
+                    <button onclick="callService()" class="flex-1 bg-white/20 backdrop-blur-sm text-white py-3 rounded-lg font-medium touch-friendly text-sm">
+                        <i class="fa fa-phone mr-2"></i>
+                        400-888-6666
+                    </button>
+                    <button onclick="addWechat()" class="flex-1 bg-white/20 backdrop-blur-sm text-white py-3 rounded-lg font-medium touch-friendly text-sm">
+                        <i class="fa fa-wechat mr-2"></i>
+                        企业微信
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 微信小程序底部导航栏 -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-light z-50 safe-area-bottom">
+        <div class="flex justify-around items-center h-16">
+            <div class="tab-item flex flex-col items-center justify-center text-gray-medium touch-friendly" onclick="location.href='index_v2.html'">
+                <i class="fa fa-home text-lg mb-1"></i>
+                <span class="text-xs">首页</span>
+            </div>
+            <div class="tab-item flex flex-col items-center justify-center text-gray-medium touch-friendly" onclick="location.href='sample-display_v2.html'">
+                <i class="fa fa-picture-o text-lg mb-1"></i>
+                <span class="text-xs">样片</span>
+            </div>
+            <div class="tab-item flex flex-col items-center justify-center touch-friendly" onclick="location.href='user-selection_v2.html'">
+                <div class="w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center -mt-6 shadow-lg relative">
+                    <i class="fa fa-camera text-lg"></i>
+                </div>
+                <span class="text-xs text-primary font-medium mt-1">拍摄</span>
+            </div>
+            <div class="tab-item flex flex-col items-center justify-center text-gray-medium touch-friendly no-scale" onclick="location.href='user-management_v2.html'">
+                <i class="fa fa-user text-lg mb-1"></i>
+                <span class="text-xs">订单</span>
+            </div>
+            <div class="tab-item flex flex-col items-center justify-center text-gray-medium touch-friendly" onclick="location.href='after-service_v2.html'">
+                <i class="fa fa-star text-lg mb-1"></i>
+                <span class="text-xs">定制</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- JavaScript交互代码 -->
+    <script>
+        // 小程序样式初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 添加小程序风格的触摸反馈
+            const touchElements = document.querySelectorAll('.touch-friendly');
+            touchElements.forEach(element => {
+                // 跳过有 no-scale 类的元素
+                if (element.classList.contains('no-scale')) {
+                    element.addEventListener('touchstart', function() {
+                        this.style.opacity = '0.7';
+                    });
+                    
+                    element.addEventListener('touchend', function() {
+                        this.style.opacity = '1';
+                    });
+                    
+                    element.addEventListener('touchcancel', function() {
+                        this.style.opacity = '1';
+                    });
+                } else {
+                    element.addEventListener('touchstart', function() {
+                        this.style.opacity = '0.7';
+                        this.style.transform = 'scale(0.95)';
+                    });
+                    
+                    element.addEventListener('touchend', function() {
+                        this.style.opacity = '1';
+                        this.style.transform = 'scale(1)';
+                    });
+                    
+                    element.addEventListener('touchcancel', function() {
+                        this.style.opacity = '1';
+                        this.style.transform = 'scale(1)';
+                    });
+                }
+            });
+        });
+
+        // 客服电话
+        function callService() {
+            if (typeof wx !== 'undefined') {
+                wx.makePhoneCall({
+                    phoneNumber: '400-888-6666',
+                    success: function() {
+                        console.log('拨打电话成功');
+                    }
+                });
+            } else {
+                window.open('tel:400-888-6666');
+            }
+        }
+
+        // 添加企业微信
+        function addWechat() {
+            if (typeof wx !== 'undefined') {
+                wx.showModal({
+                    title: '添加企业微信',
+                    content: '请搜索企业微信号：DroneVideo2023 或扫描二维码添加，我们将第一时间为您发送拍摄成片。',
+                    showCancel: false,
+                    confirmText: '知道了'
+                });
+            } else {
+                alert('请搜索企业微信号：DroneVideo2023');
+            }
+        }
+
+        // 显示完整免责声明
+        function showFullDisclaimer() {
+            if (typeof wx !== 'undefined') {
+                wx.showModal({
+                    title: '完整免责声明',
+                    content: '1. 由于无人机拍摄受天气、环境等因素影响，可能出现拍摄效果与样片存在差异的情况，敬请谅解。\n2. 请确保在指定安全区域内进行拍摄，禁止在禁飞区、军事区、机场附近等敏感区域使用无人机。\n3. 如因用户提供的位置不准确或用户自身原因导致的拍摄失败，本平台不承担相关责任。\n4. 用户需遵守当地相关法律法规，不得利用本平台服务进行任何违法活动。\n5. 本平台保留对无人机航线、拍摄角度等进行调整的权利，以确保飞行安全。',
+                    showCancel: false,
+                    confirmText: '我已了解'
+                });
+            } else {
+                alert('完整免责声明内容已显示');
+            }
+        }
+    </script>
+</body>
+</html>
