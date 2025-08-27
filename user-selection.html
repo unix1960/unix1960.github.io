@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>拍摄选择 - 无人机自助打卡</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3B82F6',
+                        secondary: '#6366F1',
+                        accent: '#EC4899',
+                        dark: '#1E293B',
+                        light: '#F8FAFC',
+                        'gray-medium': '#64748B',
+                        'gray-light': '#E2E8F0',
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .touch-friendly {
+                touch-action: manipulation;
+                -webkit-tap-highlight-color: transparent;
+            }
+            .scrollbar-hide {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+            .scrollbar-hide::-webkit-scrollbar {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body class="font-inter bg-light text-dark antialiased touch-action-manipulation">
+    <div class="min-h-screen w-full">
+        <!-- 顶部导航栏 -->
+        <header class="sticky top-0 left-0 right-0 bg-white z-30 shadow-sm">
+            <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+                <button onclick="location.href='index.html'" class="text-dark touch-friendly">
+                    <i class="fa fa-arrow-left text-lg"></i>
+                </button>
+                <h1 class="text-xl font-bold">开始拍摄</h1>
+                <div class="w-6"></div>
+            </div>
+        </header>
+        
+        <!-- 拍摄选择内容 -->
+        <div class="px-4 py-6 space-y-8">
+            <!-- 拍摄点位选择 -->
+            <div class="space-y-4">
+                <h2 class="text-lg font-bold">选择拍摄点位</h2>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="location-item border border-gray-light rounded-xl p-4 hover:border-primary transition-colors cursor-pointer" onclick="selectLocation(this)">
+                        <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center text-primary mb-3">
+                            <i class="fa fa-map-marker text-xl"></i>
+                        </div>
+                        <h3 class="font-medium mb-1">点位A - 山顶观景台</h3>
+                        <p class="text-gray-medium text-xs mb-2">俯瞰城市全景，视野开阔</p>
+                        <div class="text-xs text-primary">
+                            <i class="fa fa-star mr-1"></i> 4.9 (128条评价)
+                        </div>
+                    </div>
+                    <div class="location-item border border-gray-light rounded-xl p-4 hover:border-primary transition-colors cursor-pointer" onclick="selectLocation(this)">
+                        <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center text-primary mb-3">
+                            <i class="fa fa-map-marker text-xl"></i>
+                        </div>
+                        <h3 class="font-medium mb-1">点位B - 城市阳台</h3>
+                        <p class="text-gray-medium text-xs mb-2">城市天际线最佳拍摄点</p>
+                        <div class="text-xs text-primary">
+                            <i class="fa fa-star mr-1"></i> 4.8 (96条评价)
+                        </div>
+                    </div>
+                    <div class="location-item border border-gray-light rounded-xl p-4 hover:border-primary transition-colors cursor-pointer" onclick="selectLocation(this)">
+                        <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center text-primary mb-3">
+                            <i class="fa fa-map-marker text-xl"></i>
+                        </div>
+                        <h3 class="font-medium mb-1">点位C - 湖畔公园</h3>
+                        <p class="text-gray-medium text-xs mb-2">湖光山色，自然美景</p>
+                        <div class="text-xs text-primary">
+                            <i class="fa fa-star mr-1"></i> 4.7 (82条评价)
+                        </div>
+                    </div>
+                    <div class="location-item border border-gray-light rounded-xl p-4 hover:border-primary transition-colors cursor-pointer" onclick="selectLocation(this)">
+                        <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center text-primary mb-3">
+                            <i class="fa fa-map-marker text-xl"></i>
+                        </div>
+                        <h3 class="font-medium mb-1">点位D - 文化中心</h3>
+                        <p class="text-gray-medium text-xs mb-2">现代建筑与传统文化结合</p>
+                        <div class="text-xs text-primary">
+                            <i class="fa fa-star mr-1"></i> 4.6 (75条评价)
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 拍摄套餐选择 -->
+            <div class="space-y-4">
+                <h2 class="text-lg font-bold">选择拍摄套餐</h2>
+                <div class="space-y-4">
+                    <div class="package-item border border-gray-light rounded-xl p-4 hover:border-primary transition-colors cursor-pointer" onclick="selectPackage(this, 99)">
+                        <div class="flex justify-between items-start mb-3">
+                            <div>
+                                <h3 class="font-medium">基础打卡套餐</h3>
+                                <p class="text-gray-medium text-xs">1个点位，标准拍摄</p>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-primary font-bold">¥99</span>
+                                <span class="text-gray-medium text-xs line-through ml-1">¥129</span>
+                            </div>
+                        </div>
+                        <div class="flex space-x-2 mb-3">
+                            <div class="text-xs bg-primary/10 text-primary px-2 py-1 rounded">15张照片</div>
+                            <div class="text-xs bg-primary/10 text-primary px-2 py-1 rounded">1段视频</div>
+                        </div>
+                    </div>
+                    <div class="package-item border-2 border-accent bg-accent/5 rounded-xl p-4 hover:border-primary transition-colors cursor-pointer selected" onclick="selectPackage(this, 199)">
+                        <div class="flex justify-between items-start mb-3">
+                            <div>
+                                <h3 class="font-medium">进阶打卡套餐</h3>
+                                <p class="text-gray-medium text-xs">2个点位，丰富内容</p>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-accent font-bold">¥199</span>
+                                <span class="text-gray-medium text-xs line-through ml-1">¥249</span>
+                            </div>
+                        </div>
+                        <div class="flex space-x-2 mb-3">
+                            <div class="text-xs bg-accent/10 text-accent px-2 py-1 rounded">30张照片</div>
+                            <div class="text-xs bg-accent/10 text-accent px-2 py-1 rounded">2段视频</div>
+                        </div>
+                        <div class="text-xs text-accent">
+                            <i class="fa fa-fire mr-1"></i> 热门推荐
+                        </div>
+                    </div>
+                    <div class="package-item border border-gray-light rounded-xl p-4 hover:border-primary transition-colors cursor-pointer" onclick="selectPackage(this, 299)">
+                        <div class="flex justify-between items-start mb-3">
+                            <div>
+                                <h3 class="font-medium">自由跟拍套餐</h3>
+                                <p class="text-gray-medium text-xs">30分钟自由拍摄</p>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-secondary font-bold">¥299</span>
+                                <span class="text-gray-medium text-xs line-through ml-1">¥369</span>
+                            </div>
+                        </div>
+                        <div class="flex space-x-2 mb-3">
+                            <div class="text-xs bg-secondary/10 text-secondary px-2 py-1 rounded">50张照片</div>
+                            <div class="text-xs bg-secondary/10 text-secondary px-2 py-1 rounded">3段视频</div>
+                        </div>
+                        <div class="text-xs text-secondary">
+                            <i class="fa fa-star mr-1"></i> 包含自由跟拍
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 附加选项 -->
+            <div class="space-y-4">
+                <h2 class="text-lg font-bold">附加选项</h2>
+                <div class="space-y-3">
+                    <div class="option-item border border-gray-light rounded-lg p-3 hover:border-primary transition-colors cursor-pointer" onclick="toggleOption(this, 30)">
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center space-x-3">
+                                <div class="option-checkbox w-5 h-5 border border-gray-light rounded flex items-center justify-center">
+                                    <i class="fa fa-check text-primary text-xs hidden"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-medium text-sm">快速交付</h3>
+                                    <p class="text-gray-medium text-xs">4小时内获取成片</p>
+                                </div>
+                            </div>
+                            <span class="text-primary font-medium">+¥30</span>
+                        </div>
+                    </div>
+                    <div class="option-item border border-gray-light rounded-lg p-3 hover:border-primary transition-colors cursor-pointer" onclick="toggleOption(this, 20)">
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center space-x-3">
+                                <div class="option-checkbox w-5 h-5 border border-gray-light rounded flex items-center justify-center">
+                                    <i class="fa fa-check text-primary text-xs hidden"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-medium text-sm">美颜滤镜</h3>
+                                    <p class="text-gray-medium text-xs">专业人像美化处理</p>
+                                </div>
+                            </div>
+                            <span class="text-primary font-medium">+¥20</span>
+                        </div>
+                    </div>
+                    <div class="option-item border border-gray-light rounded-lg p-3 hover:border-primary transition-colors cursor-pointer" onclick="toggleOption(this, 15)">
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center space-x-3">
+                                <div class="option-checkbox w-5 h-5 border border-gray-light rounded flex items-center justify-center">
+                                    <i class="fa fa-check text-primary text-xs hidden"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-medium text-sm">音乐音效</h3>
+                                    <p class="text-gray-medium text-xs">专业配乐和音效</p>
+                                </div>
+                            </div>
+                            <span class="text-primary font-medium">+¥15</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 确认选择按钮 -->
+            <div class="sticky bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-light -mx-4 mt-10">
+                <div class="flex justify-between items-center mb-3">
+                    <div>
+                        <span class="text-gray-medium text-sm">总价：</span>
+                        <span class="text-primary font-bold text-xl" id="total-price">¥199</span>
+                    </div>
+                    <button id="confirm-selection" onclick="confirmSelection()" class="px-8 py-3 bg-primary text-white rounded-lg font-medium hover:bg-primary/90 transition-colors touch-friendly">
+                        确认选择
+                    </button>
+                </div>
+                <p class="text-gray-medium text-xs text-center">
+                    确认后将进入用户注册和支付流程
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript交互代码 -->
+    <script>
+        let selectedLocation = '';
+        let selectedPackage = { name: '进阶打卡套餐', price: 199 };
+        let selectedOptions = [];
+        let totalPrice = 199;
+
+        // 选择拍摄点位
+        function selectLocation(element) {
+            // 移除其他选中状态
+            document.querySelectorAll('.location-item').forEach(item => {
+                item.classList.remove('border-primary', 'shadow-md', 'bg-primary/5');
+                item.classList.add('border-gray-light');
+            });
+            
+            // 添加选中状态
+            element.classList.remove('border-gray-light');
+            element.classList.add('border-primary', 'shadow-md', 'bg-primary/5');
+            
+            selectedLocation = element.querySelector('h3').textContent;
+            console.log('选择地点:', selectedLocation);
+        }
+
+        // 选择套餐
+        function selectPackage(element, price) {
+            // 移除其他选中状态
+            document.querySelectorAll('.package-item').forEach(item => {
+                item.classList.remove('border-2', 'border-accent', 'bg-accent/5', 'border-primary', 'bg-primary/5', 'selected');
+                item.classList.add('border', 'border-gray-light');
+            });
+            
+            // 添加选中状态
+            element.classList.remove('border', 'border-gray-light');
+            element.classList.add('border-2', 'border-primary', 'bg-primary/5', 'selected');
+            
+            selectedPackage = {
+                name: element.querySelector('h3').textContent,
+                price: price
+            };
+            
+            updateTotalPrice();
+            console.log('选择套餐:', selectedPackage);
+        }
+
+        // 切换附加选项
+        function toggleOption(element, price) {
+            const checkbox = element.querySelector('.option-checkbox');
+            const checkIcon = checkbox.querySelector('i');
+            const optionName = element.querySelector('h3').textContent;
+            
+            if (checkIcon.classList.contains('hidden')) {
+                // 选中
+                checkIcon.classList.remove('hidden');
+                checkbox.classList.add('border-primary', 'bg-primary/10');
+                checkbox.classList.remove('border-gray-light');
+                element.classList.add('border-primary', 'bg-primary/5');
+                element.classList.remove('border-gray-light');
+                
+                selectedOptions.push({ name: optionName, price: price });
+            } else {
+                // 取消选中
+                checkIcon.classList.add('hidden');
+                checkbox.classList.remove('border-primary', 'bg-primary/10');
+                checkbox.classList.add('border-gray-light');
+                element.classList.remove('border-primary', 'bg-primary/5');
+                element.classList.add('border-gray-light');
+                
+                selectedOptions = selectedOptions.filter(option => option.name !== optionName);
+            }
+            
+            updateTotalPrice();
+        }
+
+        // 更新总价
+        function updateTotalPrice() {
+            totalPrice = selectedPackage.price;
+            selectedOptions.forEach(option => {
+                totalPrice += option.price;
+            });
+            
+            document.getElementById('total-price').textContent = `¥${totalPrice}`;
+        }
+
+        // 确认选择
+        function confirmSelection() {
+            if (!selectedLocation) {
+                alert('请选择拍摄点位');
+                return;
+            }
+            
+            // 保存选择到localStorage
+            const selectionData = {
+                location: selectedLocation,
+                package: selectedPackage,
+                options: selectedOptions,
+                totalPrice: totalPrice,
+                timestamp: new Date().toISOString()
+            };
+            
+            localStorage.setItem('userSelection', JSON.stringify(selectionData));
+            
+            // 跳转到用户管理页面
+            location.href = 'user-management.html';
+        }
+
+        // 页面加载时初始化
+        window.addEventListener('DOMContentLoaded', function() {
+            // 默认选择第一个地点
+            const firstLocation = document.querySelector('.location-item');
+            if (firstLocation) {
+                selectLocation(firstLocation);
+            }
+            
+            // 检查是否有保存的选择
+            const savedSelection = localStorage.getItem('userSelection');
+            if (savedSelection) {
+                const data = JSON.parse(savedSelection);
+                // 可以在这里恢复之前的选择状态
+                console.log('恢复之前的选择:', data);
+            }
+        });
+    </script>
+</body>
+</html>

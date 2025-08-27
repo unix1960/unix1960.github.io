@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>无人机自助打卡 - DroneSelfie</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3B82F6',
+                        secondary: '#6366F1',
+                        accent: '#EC4899',
+                        dark: '#1E293B',
+                        light: '#F8FAFC',
+                        'gray-medium': '#64748B',
+                        'gray-light': '#E2E8F0',
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            }
+            .backdrop-blur-md {
+                backdrop-filter: blur(12px);
+            }
+            .touch-friendly {
+                touch-action: manipulation;
+                -webkit-tap-highlight-color: transparent;
+            }
+        }
+    </style>
+</head>
+<body class="font-inter bg-light text-dark antialiased touch-action-manipulation">
+    <!-- 全局页面容器 -->
+    <div class="min-h-screen w-full relative overflow-hidden">
+        <!-- 顶部导航栏 -->
+        <header id="navbar" class="fixed top-0 left-0 right-0 bg-dark/80 backdrop-blur-md z-40 transition-all duration-300">
+            <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+                <div class="flex items-center">
+                    <h1 class="text-white text-xl font-bold flex items-center">
+                        <i class="fa fa-paper-plane mr-2"></i>DroneSelfie
+                    </h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button id="menu-toggle" class="text-white text-xl touch-friendly">
+                        <i class="fa fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        
+        <!-- 侧边导航菜单 -->
+        <div id="side-menu" class="fixed top-0 right-0 bottom-0 w-64 bg-white shadow-xl z-50 transform translate-x-full transition-all duration-400 ease-in-out">
+            <div class="p-5 h-full flex flex-col">
+                <div class="flex justify-between items-center mb-8">
+                    <h2 class="text-xl font-bold">菜单</h2>
+                    <button id="close-menu" class="text-gray-medium hover:text-dark touch-friendly">
+                        <i class="fa fa-times text-xl"></i>
+                    </button>
+                </div>
+                <ul class="space-y-4 flex-1">
+                    <li class="menu-item transition-all duration-300 translate-x-4 opacity-0 delay-100"><a href="index.html" class="flex items-center space-x-3 text-primary font-medium"><i class="fa fa-home text-lg"></i><span>首页</span></a></li>
+                    <li class="menu-item transition-all duration-300 translate-x-4 opacity-0 delay-150"><a href="sample-display.html" class="flex items-center space-x-3 text-gray-medium hover:text-primary"><i class="fa fa-images text-lg"></i><span>样片展示</span></a></li>
+                    <li class="menu-item transition-all duration-300 translate-x-4 opacity-0 delay-200"><a href="info-display.html" class="flex items-center space-x-3 text-gray-medium hover:text-primary"><i class="fa fa-tag text-lg"></i><span>价格说明</span></a></li>
+                    <li class="menu-item transition-all duration-300 translate-x-4 opacity-0 delay-250"><a href="user-selection.html" class="flex items-center space-x-3 text-gray-medium hover:text-primary"><i class="fa fa-camera text-lg"></i><span>开始拍摄</span></a></li>
+                    <li class="menu-item transition-all duration-300 translate-x-4 opacity-0 delay-300"><a href="user-management.html" class="flex items-center space-x-3 text-gray-medium hover:text-primary"><i class="fa fa-list-alt text-lg"></i><span>用户中心</span></a></li>
+                    <li class="menu-item transition-all duration-300 translate-x-4 opacity-0 delay-350"><a href="operation-control.html" class="flex items-center space-x-3 text-gray-medium hover:text-primary"><i class="fa fa-gamepad text-lg"></i><span>操作控制</span></a></li>
+                    <li class="menu-item transition-all duration-300 translate-x-4 opacity-0 delay-400"><a href="after-service.html" class="flex items-center space-x-3 text-gray-medium hover:text-primary"><i class="fa fa-star text-lg"></i><span>售后服务</span></a></li>
+                </ul>
+                
+                <!-- 菜单底部装饰 -->
+                <div class="pt-4 border-t border-gray-light mt-auto">
+                    <div class="flex justify-center space-x-3">
+                        <span class="text-xs text-gray-medium">DroneSelfie</span>
+                        <span class="text-xs text-gray-light">|</span>
+                        <span class="text-xs text-gray-medium">v1.0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 菜单遮罩 -->
+        <div id="menu-overlay" class="fixed inset-0 bg-black/50 z-40 hidden"></div>
+        
+        <!-- 英雄区域 -->
+        <section class="relative h-screen flex items-center justify-center overflow-hidden">
+            <div class="absolute inset-0 z-0">
+                <img src="https://picsum.photos/id/1015/1200/800" alt="无人机拍摄风景" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-b from-dark/50 via-dark/30 to-dark/90"></div>
+            </div>
+            <div class="container mx-auto px-4 z-10 text-center">
+                <h2 class="text-[clamp(2rem,6vw,3.5rem)] font-bold text-white text-shadow mb-6">探索无人机拍摄的<br>壮丽视角</h2>
+                <p class="text-white/90 text-lg mb-8 max-w-2xl mx-auto">专业无人机为您提供高质量的旅游打卡照片和视频，留下难忘的旅行回忆。</p>
+                <div class="flex flex-col sm:flex-row justify-center gap-4">
+                    <button onclick="location.href='user-selection.html'" class="px-8 py-4 bg-primary text-white rounded-lg font-medium hover:bg-primary/90 transition-colors touch-friendly text-lg">
+                        开始探索
+                    </button>
+                    <button onclick="location.href='sample-display.html'" class="px-8 py-4 bg-white/20 backdrop-blur-sm text-white rounded-lg font-medium hover:bg-white/30 transition-colors touch-friendly text-lg">
+                        查看样片
+                    </button>
+                </div>
+                <!-- 滚动指示 -->
+                <div class="absolute bottom-12 left-1/2 transform -translate-x-1/2 text-white/80 animate-bounce">
+                    <i class="fa fa-angle-down text-3xl"></i>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 特点介绍 -->
+        <section class="py-20 px-4 bg-white">
+            <div class="container mx-auto">
+                <div class="text-center mb-16">
+                    <h2 class="text-[clamp(1.8rem,5vw,3rem)] font-bold mb-4">为什么选择我们</h2>
+                    <p class="text-gray-medium max-w-2xl mx-auto">专业的无人机拍摄服务，让您轻松获取高质量的旅行照片和视频</p>
+                </div>
+                <div class="grid grid-cols-2 gap-8">
+                    <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow border border-gray-light">
+                        <div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-5">
+                            <i class="fa fa-camera text-2xl"></i>
+                        </div>
+                        <h3 class="font-bold text-xl mb-3">专业拍摄</h3>
+                        <p class="text-gray-medium text-base">高清无人机拍摄，捕捉最美角度</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow border border-gray-light">
+                        <div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-5">
+                            <i class="fa fa-clock-o text-2xl"></i>
+                        </div>
+                        <h3 class="font-bold text-xl mb-3">快速成片</h3>
+                        <p class="text-gray-medium text-base">AI智能剪辑，即时查看效果</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow border border-gray-light">
+                        <div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-5">
+                            <i class="fa fa-map-marker text-2xl"></i>
+                        </div>
+                        <h3 class="font-bold text-xl mb-3">智能定位</h3>
+                        <p class="text-gray-medium text-base">精准点位导航，轻松找到打卡点</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow border border-gray-light">
+                        <div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-5">
+                            <i class="fa fa-lock text-2xl"></i>
+                        </div>
+                        <h3 class="font-bold text-xl mb-3">安全保障</h3>
+                        <p class="text-gray-medium text-base">专业操控，多重安全防护</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- JavaScript交互代码 -->
+    <script>
+        // DOM元素获取
+        const menuToggle = document.getElementById('menu-toggle');
+        const sideMenu = document.getElementById('side-menu');
+        const closeMenu = document.getElementById('close-menu');
+        const menuOverlay = document.getElementById('menu-overlay');
+        const navbar = document.getElementById('navbar');
+        
+        // 导航栏滚动效果
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 50) {
+                navbar.classList.add('py-2');
+                navbar.classList.remove('py-3');
+            } else {
+                navbar.classList.add('py-3');
+                navbar.classList.remove('py-2');
+            }
+        });
+        
+        // 侧边菜单控制
+        menuToggle.addEventListener('click', function() {
+            // 显示菜单和遮罩
+            sideMenu.classList.remove('translate-x-full');
+            menuOverlay.classList.remove('hidden');
+            
+            // 添加入场动画效果
+            setTimeout(() => {
+                const menuItems = document.querySelectorAll('.menu-item');
+                menuItems.forEach(item => {
+                    item.classList.remove('translate-x-4', 'opacity-0');
+                });
+            }, 50);
+        });
+        
+        function closeSideMenu() {
+            // 添加退场动画效果
+            const menuItems = document.querySelectorAll('.menu-item');
+            menuItems.forEach(item => {
+                item.classList.add('translate-x-4', 'opacity-0');
+            });
+            
+            // 延迟隐藏菜单
+            setTimeout(() => {
+                sideMenu.classList.add('translate-x-full');
+                menuOverlay.classList.add('hidden');
+            }, 200);
+        }
+        
+        closeMenu.addEventListener('click', closeSideMenu);
+        menuOverlay.addEventListener('click', closeSideMenu);
+    </script>
+</body>
+</html>

@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>样片展示 - 无人机自助打卡</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3B82F6',
+                        secondary: '#6366F1',
+                        accent: '#EC4899',
+                        dark: '#1E293B',
+                        light: '#F8FAFC',
+                        'gray-medium': '#64748B',
+                        'gray-light': '#E2E8F0',
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            }
+            .backdrop-blur-md {
+                backdrop-filter: blur(12px);
+            }
+            .touch-friendly {
+                touch-action: manipulation;
+                -webkit-tap-highlight-color: transparent;
+            }
+            .scrollbar-hide {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+            .scrollbar-hide::-webkit-scrollbar {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body class="font-inter bg-light text-dark antialiased touch-action-manipulation">
+    <div class="min-h-screen w-full">
+        <!-- 顶部导航栏 -->
+        <header class="sticky top-0 left-0 right-0 bg-white z-30 shadow-md">
+            <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+                <button onclick="location.href='index.html'" class="text-dark touch-friendly">
+                    <i class="fa fa-arrow-left text-lg"></i>
+                </button>
+                <h1 class="text-xl font-bold">精选样片</h1>
+                <div class="w-6"></div>
+            </div>
+        </header>
+        
+        <!-- 分类筛选 -->
+        <div class="sticky top-16 left-0 right-0 bg-white z-20 shadow-sm px-6 py-3">
+            <div class="flex space-x-3 overflow-x-auto pb-2 scrollbar-hide">
+                <button class="filter-btn flex-shrink-0 px-5 py-2 bg-primary text-white rounded-full text-sm font-medium" data-filter="all">全部</button>
+                <button class="filter-btn flex-shrink-0 px-5 py-2 bg-gray-100 text-dark rounded-full text-sm font-medium" data-filter="video">视频</button>
+                <button class="filter-btn flex-shrink-0 px-5 py-2 bg-gray-100 text-dark rounded-full text-sm font-medium" data-filter="photo">照片</button>
+                <button class="filter-btn flex-shrink-0 px-5 py-2 bg-gray-100 text-dark rounded-full text-sm font-medium" data-filter="nature">自然风光</button>
+                <button class="filter-btn flex-shrink-0 px-5 py-2 bg-gray-100 text-dark rounded-full text-sm font-medium" data-filter="city">城市全景</button>
+            </div>
+        </div>
+        
+        <!-- 样片网格 -->
+        <div class="px-6 py-6">
+            <div class="grid grid-cols-2 gap-6">
+                <!-- 样片项1 -->
+                <div class="gallery-item rounded-xl overflow-hidden shadow-md transition-transform hover:scale-[1.02] cursor-pointer" data-category="video nature" onclick="openModal('高空俯拍全景', '360度全景俯拍，展现壮丽景色', 'https://picsum.photos/id/1018/800/1200', 'video')">
+                    <div class="relative">
+                        <img src="https://picsum.photos/id/1018/800/1200" alt="壮丽山脉" class="w-full h-64 object-cover">
+                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
+                            <div class="flex justify-between items-center">
+                                <h3 class="text-white font-bold">高空俯拍全景</h3>
+                                <div class="text-white text-xs bg-accent/80 px-2 py-1 rounded">
+                                    <i class="fa fa-play mr-1"></i> 视频
+                                </div>
+                            </div>
+                        </div>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="w-14 h-14 rounded-full bg-accent/80 flex items-center justify-center">
+                                <i class="fa fa-play text-white text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4 bg-white">
+                        <div class="flex justify-between items-center">
+                            <p class="text-gray-medium text-sm">点位A - 山顶观景台</p>
+                            <div class="text-sm text-primary">
+                                <i class="fa fa-star mr-1"></i> 4.9
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 样片项2 -->
+                <div class="gallery-item rounded-xl overflow-hidden shadow-md transition-transform hover:scale-[1.02] cursor-pointer" data-category="video nature" onclick="openModal('环绕拍摄', '无人机围绕人物环绕拍摄，动感十足', 'https://picsum.photos/id/1031/800/1200', 'video')">
+                    <div class="relative">
+                        <img src="https://picsum.photos/id/1031/800/1200" alt="环绕拍摄" class="w-full h-64 object-cover">
+                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
+                            <div class="flex justify-between items-center">
+                                <h3 class="text-white font-bold">环绕拍摄</h3>
+                                <div class="text-white text-xs bg-accent/80 px-2 py-1 rounded">
+                                    <i class="fa fa-play mr-1"></i> 视频
+                                </div>
+                            </div>
+                        </div>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="w-14 h-14 rounded-full bg-accent/80 flex items-center justify-center">
+                                <i class="fa fa-play text-white text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4 bg-white">
+                        <div class="flex justify-between items-center">
+                            <p class="text-gray-medium text-sm">点位B - 城市阳台</p>
+                            <div class="text-sm text-primary">
+                                <i class="fa fa-star mr-1"></i> 4.8
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 样片项3 -->
+                <div class="gallery-item rounded-xl overflow-hidden shadow-md transition-transform hover:scale-[1.02] cursor-pointer" data-category="photo nature" onclick="openModal('经典合影', '最佳角度人物合影，背景美不胜收', 'https://picsum.photos/id/1039/800/1200', 'photo')">
+                    <div class="relative">
+                        <img src="https://picsum.photos/id/1039/800/1200" alt="湖畔风光" class="w-full h-64 object-cover">
+                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
+                            <div class="flex justify-between items-center">
+                                <h3 class="text-white font-bold">经典合影</h3>
+                                <div class="text-white text-xs bg-primary/80 px-2 py-1 rounded">
+                                    <i class="fa fa-camera mr-1"></i> 照片
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4 bg-white">
+                        <div class="flex justify-between items-center">
+                            <p class="text-gray-medium text-sm">点位C - 湖畔公园</p>
+                            <div class="text-sm text-primary">
+                                <i class="fa fa-star mr-1"></i> 4.7
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 样片项4 -->
+                <div class="gallery-item rounded-xl overflow-hidden shadow-md transition-transform hover:scale-[1.02] cursor-pointer" data-category="video nature" onclick="openModal('自由跟拍', '智能跟随拍摄，记录自然状态', 'https://picsum.photos/id/1073/800/1200', 'video')">
+                    <div class="relative">
+                        <img src="https://picsum.photos/id/1073/800/1200" alt="现代建筑" class="w-full h-64 object-cover">
+                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
+                            <div class="flex justify-between items-center">
+                                <h3 class="text-white font-bold">自由跟拍</h3>
+                                <div class="text-white text-xs bg-accent/80 px-2 py-1 rounded">
+                                    <i class="fa fa-play mr-1"></i> 视频
+                                </div>
+                            </div>
+                        </div>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="w-14 h-14 rounded-full bg-accent/80 flex items-center justify-center">
+                                <i class="fa fa-play text-white text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4 bg-white">
+                        <div class="flex justify-between items-center">
+                            <p class="text-gray-medium text-sm">点位D - 文化中心</p>
+                            <div class="text-sm text-primary">
+                                <i class="fa fa-star mr-1"></i> 4.6
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 样片项5 -->
+                <div class="gallery-item rounded-xl overflow-hidden shadow-md transition-transform hover:scale-[1.02] cursor-pointer" data-category="photo city" onclick="openModal('创意角度', '独特视角创意拍摄，与众不同', 'https://picsum.photos/id/1015/800/1200', 'photo')">
+                    <div class="relative">
+                        <img src="https://picsum.photos/id/1015/800/1200" alt="山间云雾" class="w-full h-64 object-cover">
+                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
+                            <div class="flex justify-between items-center">
+                                <h3 class="text-white font-bold">创意角度</h3>
+                                <div class="text-white text-xs bg-primary/80 px-2 py-1 rounded">
+                                    <i class="fa fa-camera mr-1"></i> 照片
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4 bg-white">
+                        <div class="flex justify-between items-center">
+                            <p class="text-gray-medium text-sm">点位E - 云顶步道</p>
+                            <div class="text-sm text-primary">
+                                <i class="fa fa-star mr-1"></i> 4.9
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 样片项6 -->
+                <div class="gallery-item rounded-xl overflow-hidden shadow-md transition-transform hover:scale-[1.02] cursor-pointer" data-category="video city" onclick="openModal('延时摄影', '时光流转，记录美好瞬间', 'https://picsum.photos/id/1019/800/1200', 'video')">
+                    <div class="relative">
+                        <img src="https://picsum.photos/id/1019/800/1200" alt="海岸线" class="w-full h-64 object-cover">
+                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
+                            <div class="flex justify-between items-center">
+                                <h3 class="text-white font-bold">延时摄影</h3>
+                                <div class="text-white text-xs bg-accent/80 px-2 py-1 rounded">
+                                    <i class="fa fa-play mr-1"></i> 视频
+                                </div>
+                            </div>
+                        </div>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="w-14 h-14 rounded-full bg-accent/80 flex items-center justify-center">
+                                <i class="fa fa-play text-white text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4 bg-white">
+                        <div class="flex justify-between items-center">
+                            <p class="text-gray-medium text-sm">点位F - 海滨公园</p>
+                            <div class="text-sm text-primary">
+                                <i class="fa fa-star mr-1"></i> 4.8
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 加载更多按钮 -->
+            <div class="flex justify-center mt-8 mb-20">
+                <button id="load-more" class="px-8 py-3 bg-primary text-white rounded-lg font-medium hover:bg-primary/90 transition-colors touch-friendly">
+                    加载更多 <i class="fa fa-angle-down ml-1"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 样片详情模态框 -->
+    <div id="gallery-detail-modal" class="fixed inset-0 bg-black/90 z-50 hidden flex items-center justify-center">
+        <button id="close-gallery-detail" class="fixed top-4 right-4 text-white p-2 z-10 touch-friendly">
+            <i class="fa fa-times text-xl"></i>
+        </button>
+        <div class="w-full max-w-md mx-4">
+            <div class="relative h-[60vh] mb-4">
+                <img id="gallery-detail-img" src="" alt="样片详情" class="w-full h-full object-contain rounded-lg">
+                <div id="play-overlay" class="absolute inset-0 flex items-center justify-center hidden">
+                    <div class="w-20 h-20 rounded-full bg-accent/80 flex items-center justify-center">
+                        <i class="fa fa-play text-white text-2xl"></i>
+                    </div>
+                </div>
+            </div>
+            <h2 id="gallery-detail-title" class="text-white text-xl font-bold mb-2">样片标题</h2>
+            <p id="gallery-detail-desc" class="text-white/80 text-sm mb-4">样片描述</p>
+            <div class="flex justify-between items-center">
+                <div class="text-white text-sm">
+                    <i class="fa fa-camera mr-1"></i> <span id="detail-type">照片</span>
+                </div>
+                <button onclick="location.href='user-selection.html'" class="px-4 py-2 bg-primary text-white rounded-lg text-sm hover:bg-primary/90 transition-colors touch-friendly">
+                    立即拍摄
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript交互代码 -->
+    <script>
+        // DOM元素获取
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const galleryItems = document.querySelectorAll('.gallery-item');
+        const galleryDetailModal = document.getElementById('gallery-detail-modal');
+        const closeGalleryDetail = document.getElementById('close-gallery-detail');
+        const galleryDetailImg = document.getElementById('gallery-detail-img');
+        const galleryDetailTitle = document.getElementById('gallery-detail-title');
+        const galleryDetailDesc = document.getElementById('gallery-detail-desc');
+        const detailType = document.getElementById('detail-type');
+        const playOverlay = document.getElementById('play-overlay');
+        const loadMore = document.getElementById('load-more');
+        
+        // 分类筛选功能
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                // 更新按钮状态
+                filterBtns.forEach(b => {
+                    b.classList.remove('bg-primary', 'text-white');
+                    b.classList.add('bg-gray-100', 'text-dark');
+                });
+                this.classList.remove('bg-gray-100', 'text-dark');
+                this.classList.add('bg-primary', 'text-white');
+                
+                // 筛选逻辑
+                const filter = this.getAttribute('data-filter');
+                galleryItems.forEach(item => {
+                    const categories = item.getAttribute('data-category').split(' ');
+                    if (filter === 'all' || categories.includes(filter)) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        });
+        
+        // 打开样片详情模态框
+        function openModal(title, desc, imgSrc, type) {
+            galleryDetailTitle.textContent = title;
+            galleryDetailDesc.textContent = desc;
+            galleryDetailImg.src = imgSrc;
+            detailType.textContent = type === 'video' ? '视频' : '照片';
+            
+            if (type === 'video') {
+                playOverlay.classList.remove('hidden');
+            } else {
+                playOverlay.classList.add('hidden');
+            }
+            
+            galleryDetailModal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        // 关闭样片详情
+        closeGalleryDetail.addEventListener('click', function() {
+            galleryDetailModal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        });
+        
+        // 点击模态框外部关闭
+        galleryDetailModal.addEventListener('click', function(e) {
+            if (e.target === this) {
+                galleryDetailModal.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            }
+        });
+        
+        // 加载更多功能
+        loadMore.addEventListener('click', function() {
+            // 模拟加载更多
+            this.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i> 加载中...';
+            
+            setTimeout(() => {
+                this.innerHTML = '加载更多 <i class="fa fa-angle-down ml-1"></i>';
+                // 实际项目中这里应该有加载更多数据的逻辑
+                console.log('加载更多');
+            }, 1500);
+        });
+    </script>
+</body>
+</html>

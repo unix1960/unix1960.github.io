@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>价格说明 - 无人机自助打卡</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3B82F6',
+                        secondary: '#6366F1',
+                        accent: '#EC4899',
+                        dark: '#1E293B',
+                        light: '#F8FAFC',
+                        'gray-medium': '#64748B',
+                        'gray-light': '#E2E8F0',
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .touch-friendly {
+                touch-action: manipulation;
+                -webkit-tap-highlight-color: transparent;
+            }
+        }
+    </style>
+</head>
+<body class="font-inter bg-light text-dark antialiased touch-action-manipulation">
+    <div class="min-h-screen w-full">
+        <!-- 顶部导航栏 -->
+        <header class="sticky top-0 left-0 right-0 bg-white z-30 shadow-sm">
+            <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+                <button onclick="location.href='index.html'" class="text-dark touch-friendly">
+                    <i class="fa fa-arrow-left text-lg"></i>
+                </button>
+                <h1 class="text-xl font-bold">价格说明</h1>
+                <div class="w-6"></div>
+            </div>
+        </header>
+        
+        <!-- 价格套餐 -->
+        <div class="px-4 py-6 space-y-6">
+            <!-- 基础套餐 -->
+            <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+                <div class="bg-primary/10 px-5 py-4">
+                    <div class="flex justify-between items-center">
+                        <h3 class="font-bold text-lg">基础打卡套餐</h3>
+                        <span class="text-primary font-bold text-2xl">¥99</span>
+                    </div>
+                    <p class="text-gray-medium text-sm mt-1">适合初次体验的用户</p>
+                </div>
+                <div class="p-5">
+                    <ul class="space-y-3">
+                        <li class="flex items-start space-x-3">
+                            <i class="fa fa-check text-green-500 mt-1"></i>
+                            <span class="text-sm">1个指定点位拍摄</span>
+                        </li>
+                        <li class="flex items-start space-x-3">
+                            <i class="fa fa-check text-green-500 mt-1"></i>
+                            <span class="text-sm">15张高清照片</span>
+                        </li>
+                        <li class="flex items-start space-x-3">
+                            <i class="fa fa-check text-green-500 mt-1"></i>
+                            <span class="text-sm">1段15秒短视频</span>
+                        </li>
+                        <li class="flex items-start space-x-3">
+                            <i class="fa fa-check text-green-500 mt-1"></i>
+                            <span class="text-sm">基础AI剪辑</span>
+                        </li>
+                        <li class="flex items-start space-x-3">
+                            <i class="fa fa-check text-green-500 mt-1"></i>
+                            <span class="text-sm">3个工作日内交付</span>
+                        </li>
+                    </ul>
+                    <button onclick="location.href='user-selection.html'" class="w-full mt-5 py-3 bg-primary text-white rounded-lg font-medium hover:bg-primary/90 transition-colors touch-friendly">
+                        立即选择
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 进阶套餐 -->
+            <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+                <div class="bg-accent/10 px-5 py-4 relative">
+                    <div class="absolute top-0 right-0 bg-accent text-white text-xs px-3 py-1">
+                        热门推荐
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <h3 class="font-bold text-lg">进阶打卡套餐</h3>
+                        <span class="text-accent font-bold text-2xl">¥199</span>
+                    </div>
+                    <p class="text-gray-medium text-sm mt-1">适合追求更多样化内容的用户</p>
+                </div>
+                <div class="p-5">
+                    <ul class="space-y-3">
+                        <li class="flex items-start space-x-3">
+                            <i class="fa fa-check text-green-500 mt-1"></i>
+                            <span class="text-sm">2个指定点位拍摄</span>
+                        </li>
+                        <li class="flex items-start space-x-3">
+                            <i class="fa fa-check text-green-500 mt-1"></i>
+                            <span class="text-sm">30张高清照片</span>
+                        </li>
+                        <li class="flex items-start space-x-3">
+                            <i class="fa fa-check text-green-500 mt-1"></i>
+                            <span class="text-sm">2段30秒短视频</span>
+                        </li>
+                        <li class="flex items-start space-x-3">
+                            <i class="fa fa-check text-green-500 mt-1"></i>
+                            <span class="text-sm">高级AI剪辑</span>
+                        </li>
+                        <li class="flex items-start space-x-3">
+                            <i class="fa fa-check text-green-500 mt-1"></i>
+                            <span class="text-sm">2个工作日内交付</span>
+                        </li>
+                        <li class="flex items-start space-x-3">
+                            <i class="fa fa-check text-green-500 mt-1"></i>
+                            <span class="text-sm">1次免费修改</span>
+                        </li>
+                    </ul>
+                    <button onclick="location.href='user-selection.html'" class="w-full mt-5 py-3 bg-accent text-white rounded-lg font-medium hover:bg-accent/90 transition-colors touch-friendly">
+                        立即选择
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 自由跟拍套餐 -->
+            <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+                <div class="bg-secondary/10 px-5 py-4">
+                    <div class="flex justify-between items-center">
+                        <h3 class="font-bold text-lg">自由跟拍套餐</h3>
+                        <span class="text-secondary font-bold text-2xl">¥299</span>
+                    </div>
+                    <p class="text-gray-medium text-sm mt-1">适合需要个性化拍摄体验的用户</p>
+                </div>
+                <div class="p-5">
+                    <ul class="space-y-3">
+                        <li class="flex items-start space-x-3">
+                            <i class="fa fa-check text-green-500 mt-1"></i>
+                            <span class="text-sm">30分钟自由跟拍</span>
+                        </li>
+                        <li class="flex items-start space-x-3">
+                            <i class="fa fa-check text-green-500 mt-1"></i>
+                            <span class="text-sm">50张高清照片</span>
+                        </li>
+                        <li class="flex items-start space-x-3">
+                            <i class="fa fa-check text-green-500 mt-1"></i>
+                            <span class="text-sm">3段1分钟短视频</span>
+                        </li>
+                        <li class="flex items-start space-x-3">
+                            <i class="fa fa-check text-green-500 mt-1"></i>
+                            <span class="text-sm">专业人工剪辑</span>
+                        </li>
+                        <li class="flex items-start space-x-3">
+                            <i class="fa fa-check text-green-500 mt-1"></i>
+                            <span class="text-sm">1个工作日内交付</span>
+                        </li>
+                        <li class="flex items-start space-x-3">
+                            <i class="fa fa-check text-green-500 mt-1"></i>
+                            <span class="text-sm">3次免费修改</span>
+                        </li>
+                    </ul>
+                    <button onclick="location.href='user-selection.html'" class="w-full mt-5 py-3 bg-secondary text-white rounded-lg font-medium hover:bg-secondary/90 transition-colors touch-friendly">
+                        立即选择
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 使用说明 -->
+        <div class="px-4 py-6">
+            <div class="bg-white rounded-xl shadow-sm p-5 mb-6">
+                <h3 class="text-lg font-bold mb-4 flex items-center">
+                    <i class="fa fa-book text-primary mr-2"></i>
+                    使用说明
+                </h3>
+                <div class="space-y-4">
+                    <div class="flex">
+                        <div class="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5 mr-3">
+                            <span class="text-primary text-xs font-bold">1</span>
+                        </div>
+                        <div>
+                            <h4 class="font-medium mb-1">选择拍摄套餐</h4>
+                            <p class="text-gray-medium text-sm">根据需求选择合适的拍摄套餐和效果</p>
+                        </div>
+                    </div>
+                    <div class="flex">
+                        <div class="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5 mr-3">
+                            <span class="text-primary text-xs font-bold">2</span>
+                        </div>
+                        <div>
+                            <h4 class="font-medium mb-1">到达指定拍摄点</h4>
+                            <p class="text-gray-medium text-sm">前往选定的拍摄点位，确保在安全区域内</p>
+                        </div>
+                    </div>
+                    <div class="flex">
+                        <div class="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5 mr-3">
+                            <span class="text-primary text-xs font-bold">3</span>
+                        </div>
+                        <div>
+                            <h4 class="font-medium mb-1">确认位置并召唤无人机</h4>
+                            <p class="text-gray-medium text-sm">在APP内确认位置，点击召唤无人机按钮</p>
+                        </div>
+                    </div>
+                    <div class="flex">
+                        <div class="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5 mr-3">
+                            <span class="text-primary text-xs font-bold">4</span>
+                        </div>
+                        <div>
+                            <h4 class="font-medium mb-1">配合拍摄</h4>
+                            <p class="text-gray-medium text-sm">按照语音提示做出相应动作，保持姿势稳定</p>
+                        </div>
+                    </div>
+                    <div class="flex">
+                        <div class="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5 mr-3">
+                            <span class="text-primary text-xs font-bold">5</span>
+                        </div>
+                        <div>
+                            <h4 class="font-medium mb-1">获取成片</h4>
+                            <p class="text-gray-medium text-sm">拍摄完成后，等待AI剪辑，即可查看下载成片</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 注意事项 -->
+        <div class="px-4 py-6">
+            <div class="bg-white rounded-xl shadow-sm p-5">
+                <h3 class="text-lg font-bold mb-4 flex items-center">
+                    <i class="fa fa-exclamation-triangle text-accent mr-2"></i>
+                    注意事项
+                </h3>
+                <ul class="space-y-2 text-gray-medium text-sm">
+                    <li class="flex items-start">
+                        <i class="fa fa-exclamation-circle text-accent mt-1 mr-2"></i>
+                        <span>请确保在指定拍摄区域内使用本服务，禁止在禁飞区召唤无人机</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fa fa-exclamation-circle text-accent mt-1 mr-2"></i>
+                        <span>恶劣天气（大风、暴雨、雷电等）情况下，系统将自动取消拍摄并退款</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fa fa-exclamation-circle text-accent mt-1 mr-2"></i>
+                        <span>拍摄过程中请听从语音指引，不要做出危险动作或远离拍摄区域</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fa fa-exclamation-circle text-accent mt-1 mr-2"></i>
+                        <span>如遇无人机故障导致拍摄失败，我们将全额退款并赠送下次拍摄优惠券</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fa fa-exclamation-circle text-accent mt-1 mr-2"></i>
+                        <span>请爱护设备，故意损坏需承担赔偿责任</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 免责声明 -->
+        <div class="px-4 py-6">
+            <div class="bg-amber-50 border border-amber-200 rounded-xl p-5 mb-6">
+                <h3 class="text-lg font-bold mb-4 flex items-center text-amber-700">
+                    <i class="fa fa-info-circle mr-2"></i>
+                    免责声明
+                </h3>
+                <div class="text-amber-700 text-sm space-y-2">
+                    <p>1. 本服务仅在指定区域内提供，请严格按照指定地点进行拍摄。</p>
+                    <p>2. 因天气原因导致无法拍摄的，可免费改期或全额退款。</p>
+                    <p>3. 拍摄过程中如因个人原因导致的安全问题，本平台不承担责任。</p>
+                    <p>4. 最终成片效果以实际拍摄环境和设备状况为准。</p>
+                    <p>5. 拍摄内容仅供个人使用，不得用于商业用途。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 联系客服 -->
+        <div class="px-4 py-6 pb-20">
+            <div class="bg-gradient-to-r from-primary to-primary/80 rounded-xl p-6 text-white text-center">
+                <h3 class="text-lg font-bold mb-2">需要帮助？</h3>
+                <p class="text-white/90 text-sm mb-4">我们的专业客服团队随时为您解答</p>
+                <div class="flex flex-col space-y-3">
+                    <a href="tel:400-888-6666" class="bg-white/20 backdrop-blur-sm text-white py-3 rounded-lg font-medium hover:bg-white/30 transition-colors touch-friendly">
+                        <i class="fa fa-phone mr-2"></i>
+                        400-888-6666
+                    </a>
+                    <button class="bg-white/20 backdrop-blur-sm text-white py-3 rounded-lg font-medium hover:bg-white/30 transition-colors touch-friendly">
+                        <i class="fa fa-wechat mr-2"></i>
+                        添加企业微信
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
